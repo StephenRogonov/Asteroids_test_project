@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ namespace _Project.Scripts.GameFlow
     {
         [SerializeField] private Button _continueButton;
         [SerializeField] private Button _exitButton;
+        [SerializeField] private TMP_Text _scoreText;
 
         public event Action ContinueClicked;
         public event Action ExitClicked;
@@ -44,6 +46,11 @@ namespace _Project.Scripts.GameFlow
         private void DisableObject()
         {
             gameObject.SetActive(false);
+        }
+
+        public void UpdateScore(int score)
+        {
+            _scoreText.text = "Score: " + score;
         }
     }
 }

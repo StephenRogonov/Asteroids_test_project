@@ -18,12 +18,12 @@ namespace _Project.Scripts.GameFlow
         {
             _view = gameOverView;
 
-            _model.GameOverTriggered += EnableView;
+            _model.GameOverTriggered += UpdateView;
             _view.RestartClicked += RestartGame;
             _view.ContinueClicked += ContinueGame;
         }
 
-        public void RestartGame()
+        private void RestartGame()
         {
             _model.RestartGame();
         }
@@ -33,14 +33,15 @@ namespace _Project.Scripts.GameFlow
             _model.Continue();
         }
 
-        public void EnableView()
+        private void UpdateView(int score)
         {
+            _view.UpdateScore(score);
             _view.EnableObject();
         }
 
         public void Dispose()
         {
-            _model.GameOverTriggered -= EnableView;
+            _model.GameOverTriggered -= UpdateView;
             _view.RestartClicked -= RestartGame;
             _view.ContinueClicked -= ContinueGame;
         }

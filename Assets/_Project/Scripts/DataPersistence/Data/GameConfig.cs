@@ -5,6 +5,9 @@ namespace _Project.Scripts.Bootstrap.Configs
     [Serializable]
     public class GameConfig
     {
+        public int AsteroidScoreValue { get; set; }
+        public int ShardScoreValue { get; set; }
+        public int EnemyScoreValue { get; set; }
         public int AsteroidsPoolInitialSize { get; set; }
         public float AsteroidsSpawnRate { get; set; }
         public float AsteroidAngleOffset { get; set; }
@@ -21,25 +24,5 @@ namespace _Project.Scripts.Bootstrap.Configs
         public float ShipRotationSpeed { get; set; }
         public string AndroidGameId { get; set; }
         public string IosGameId { get; set; }
-
-        public GameConfig()
-        {
-            AsteroidsPoolInitialSize = 10;
-            AsteroidsSpawnRate = 2;
-            AsteroidAngleOffset = 20;
-            EnemiesPoolInitialSize = 5;
-            EnemiesSpawnRate = 10;
-            SpawnDistance = 13;
-            LaserShotsStartCount = 1;
-            LaserShotRestorationTime = 10;
-            LaserBeamLifetime = 0.2f;
-            LaserDistance = 20;
-            MissilesPoolInitialSize = 6;
-            ShipAcceleration = 5;
-            ShipMaxSpeed = 5;
-            ShipRotationSpeed = 1;
-            AndroidGameId = "5752796";
-            IosGameId = "5752797";
-        }
     }
 }

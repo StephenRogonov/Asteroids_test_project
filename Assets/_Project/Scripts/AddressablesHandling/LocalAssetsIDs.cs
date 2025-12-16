@@ -12,5 +12,8 @@
         public const string PAUSE_MENU = "PauseMenu";
         public const string HUD = "HUD";
         public const string MOBILE_CONTROLS = "MobileControls";
+        public const string LEADERBOARD_MENU = "LeaderboardMenu";
+        public const string LEADERBOARD_SCORE_ENTRY = "LeaderboardScoreEntry";
+        public const string LOAD_OPTIONS_MENU = "LoadOptionsMenu";
     }
 }

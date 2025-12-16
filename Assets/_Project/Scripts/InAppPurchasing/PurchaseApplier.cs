@@ -35,10 +35,10 @@ namespace _Project.Scripts.InAppPurchasing
             }
         }
 
-        private void ApplyNoAds()
+        private async void ApplyNoAds()
         {
             _noAdsPurchased = true;
-            _dataPersistenceHandler.SavePlayerData();
+            await _dataPersistenceHandler.SavePlayerData();
         }
 
         public void SaveData(PlayerData data)

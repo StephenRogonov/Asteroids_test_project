@@ -8,6 +8,7 @@ namespace _Project.Scripts.Bootstrap.Advertising
 {
     public class AdsInitialization : IUnityAdsInitializationListener
     {
+        private DataPersistenceHandler _dataPersistenceHandler;
         private GameConfig _gameConfig;
         private string _androidGameId;
         private string _iOSGameId;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.Bootstrap.Advertising
 
         public AdsInitialization(DataPersistenceHandler dataPersistenceHandler)
         {
-            _gameConfig = dataPersistenceHandler.GameConfig;
+            _dataPersistenceHandler = dataPersistenceHandler;
 
 #if (UNITY_IOS && UNITY_ANDROID)
             _testMode = false;
@@ -27,6 +28,7 @@ namespace _Project.Scripts.Bootstrap.Advertising
 
         public async UniTask InitializeAds()
         {
+            _gameConfig = _dataPersistenceHandler.GameConfig;
             _androidGameId = _gameConfig.AndroidGameId;
             _iOSGameId = _gameConfig.IosGameId;
 

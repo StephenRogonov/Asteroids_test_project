@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a4c897eb0b76a45854fea4acd9764e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bootstrapLoader: {fileID: 1776867890}
   _entryPoint: {fileID: 1776867889}
 --- !u!114 &200320889
 MonoBehaviour:
@@ -423,6 +424,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776867888}
   - component: {fileID: 1776867889}
+  - component: {fileID: 1776867890}
   m_Layer: 0
   m_Name: EntryPoint
   m_TagString: Untagged
@@ -457,6 +459,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03210004d93827c4d93402111c78f636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1776867890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776867886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf9a595535fda347991c2f7bb13aeb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.SceneInitializers.BootstrapLoader
 --- !u!114 &1231261997371913466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,12 +483,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

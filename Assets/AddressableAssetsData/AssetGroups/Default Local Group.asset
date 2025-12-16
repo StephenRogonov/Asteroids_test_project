@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 381b7116cc27f584ea600c2cb558e673
   m_SerializeEntries:
+  - m_GUID: 1073448b1ec1136458ccbd0a421213a8
+    m_Address: LeaderboardScoreEntry
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 491a5a522b1076247ae98f6aa27dd0c6
     m_Address: Missile
     m_ReadOnly: 0
@@ -22,6 +27,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56d357458ff7f2c4e963682c7c26d928
     m_Address: GameOverMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6179649f3e72da04c98f83e16c98f23f
+    m_Address: LoadOptionsMenu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -57,6 +67,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eff65835b65c6ed439ebcd93addf368d
     m_Address: HUD
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3a8a4d5d88bcde49a3df866cad7dbd6
+    m_Address: LeaderboardMenu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

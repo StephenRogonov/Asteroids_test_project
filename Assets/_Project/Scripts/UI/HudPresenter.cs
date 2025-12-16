@@ -2,6 +2,7 @@ using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
+using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
 using System;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.UI
         private GameConfig _gameConfig;
         private ShipMovement _shipMovement;
         private PauseSwitcher _pauseHandler;
-
+        private ScoreCounter _scoreCounter;
         private CountdownTimer _timer;
 
         private string _shipPosition;
@@ -29,12 +30,14 @@ namespace _Project.Scripts.UI
         public HudPresenter(
             HudModel model, 
             DataPersistenceHandler dataPersistenceHandler,
-            PauseSwitcher pauseHandler
+            PauseSwitcher pauseHandler,
+            ScoreCounter scoreCounter
             )
         {
             _model = model;
             _gameConfig = dataPersistenceHandler.GameConfig;
             _pauseHandler = pauseHandler;
+            _scoreCounter = scoreCounter;
         }
 
         public void Init(HudView hudView, ShipMovement shipMovement)
@@ -65,6 +68,7 @@ namespace _Project.Scripts.UI
 
                 _timer.Tick(Time.deltaTime);
                 _view.DisplayLaserRestorationTime(TimeSpan.FromSeconds(_timer.RemainingTime).ToString("mm':'ss"));
+                _view.DisplayScore(_scoreCounter.TotalScore);
 
                 if (_timer.RemainingTime < 0)
                 {

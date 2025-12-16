@@ -13,7 +13,8 @@ namespace _Project.Scripts.Installers
         {
             Container.BindInterfacesAndSelfTo<LocalAssetLoader>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SceneSwitcher>().AsSingle().NonLazy();
-            Container.Bind<FileDataHandler>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<FileDataHandler>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<CloudDataHandler>().AsSingle().NonLazy();
             Container.Bind<GameConfig>().AsSingle().NonLazy();
             Container.Bind<DataPersistenceHandler>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<Interstitial>().AsSingle();

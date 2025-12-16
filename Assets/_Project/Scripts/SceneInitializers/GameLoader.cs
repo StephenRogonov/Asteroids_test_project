@@ -3,6 +3,7 @@ using _Project.Scripts.Bootstrap.Analytics;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
 using _Project.Scripts.Obstacles;
+using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
 using _Project.Scripts.PlayerWeapons;
 using _Project.Scripts.ScriptableObjects;
@@ -25,6 +26,7 @@ public class GameLoader : MonoBehaviour
     private PauseView _pauseView;
     private PausePresenter _pausePresenter;
     private GameOverView _gameOverView;
+    private LeaderboardView _leaderboardView;
     private GameOverPresenter _gameOverPresenter;
     private ShipMovement _shipMovement;
     private MissilesFactory _missilesFactory;
@@ -38,6 +40,8 @@ public class GameLoader : MonoBehaviour
     private ShipLaserConfig _shipLaserConfig;
     private DataPersistenceHandler _dataPersistenceHandler;
     private PauseSwitcher _pauseSwitcher;
+    private LeaderboardModel _leaderboardModel;
+    private LeaderboardPresenter _leaderboardPresenter;
 
     [Inject]
     private void Construct(
@@ -54,7 +58,9 @@ public class GameLoader : MonoBehaviour
         ObstaclesFactory obstaclesFactory,
         ShipLaserConfig shipLaserConfig,
         DataPersistenceHandler dataPersistenceHandler,
-        PauseSwitcher pauseSwitcher
+        PauseSwitcher pauseSwitcher,
+        LeaderboardModel leaderboardModel,
+        LeaderboardPresenter leaderboardPresenter
         )
     {
         _assetLoader = assetLoader;
@@ -71,6 +77,8 @@ public class GameLoader : MonoBehaviour
         _shipLaserConfig = shipLaserConfig;
         _dataPersistenceHandler = dataPersistenceHandler;
         _pauseSwitcher = pauseSwitcher;
+        _leaderboardModel = leaderboardModel;
+        _leaderboardPresenter = leaderboardPresenter;
     }
 
     private async void Start()
@@ -83,11 +91,12 @@ public class GameLoader : MonoBehaviour
 
     private async UniTask InstantiateAddressables()
     {
+        _shipMovement = await _assetLoader.InstantiateAsset<ShipMovement>(LocalAssetsIDs.PLAYER_SHIP);
         _hudView = await _assetLoader.InstantiateAsset<HudView>(LocalAssetsIDs.HUD);
         _mobileControls = await _assetLoader.InstantiateAsset<MobileControls>(LocalAssetsIDs.MOBILE_CONTROLS);
         _pauseView = await _assetLoader.InstantiateAsset<PauseView>(LocalAssetsIDs.PAUSE_MENU);
         _gameOverView = await _assetLoader.InstantiateAsset<GameOverView>(LocalAssetsIDs.GAME_OVER_MENU);
-        _shipMovement = await _assetLoader.InstantiateAsset<ShipMovement>(LocalAssetsIDs.PLAYER_SHIP);
+        _leaderboardView = await _assetLoader.InstantiateAsset<LeaderboardView>(LocalAssetsIDs.LEADERBOARD_MENU);
     }
 
     private void PositionShip()
@@ -119,5 +128,8 @@ public class GameLoader : MonoBehaviour
         _analyticsEventManager.Init(_shipMovement, _shipLaserAttack, _shipCollision);
         _weaponTrigger.Init(_shipLaserAttack, _shipMissilesAttack);
         _obstaclesFactory.Init(_shipMovement);
+        _leaderboardModel.Init(_shipCollision);
+        _leaderboardPresenter.Init(_leaderboardView);
+        _leaderboardView.Init(_assetLoader);
     }
 }

@@ -37,9 +37,9 @@ namespace _Project.Scripts.Bootstrap.Configs
             }
 
             await remoteConfig.ActivateAsync();
-            Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
 
             _dataPersistenceHandler.SetRemoteGameConfig(remoteConfig.GetValue("gameConfigs").StringValue);
+            Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
         }
     }
 }

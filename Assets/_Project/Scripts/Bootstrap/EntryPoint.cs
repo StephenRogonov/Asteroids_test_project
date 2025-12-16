@@ -1,8 +1,9 @@
 using _Project.Scripts.Bootstrap.Advertising;
+using _Project.Scripts.Bootstrap.Authentication;
 using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.Bootstrap.Firebase;
-using _Project.Scripts.DataPersistence;
 using _Project.Scripts.Common;
+using _Project.Scripts.DataPersistence;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -15,6 +16,7 @@ namespace _Project.Scripts.Bootstrap
         private FirebaseSetup _firebaseSetup;
         private FirebaseRemoteConfigFetcher _configFetcher;
         private AdsInitialization _adsInitialization;
+        private AuthInitialization _authInitialization;
 
         private SceneSwitcher _sceneSwitcher;
 
@@ -23,6 +25,7 @@ namespace _Project.Scripts.Bootstrap
             FirebaseRemoteConfigFetcher remoteConfigFetcher,
             DataPersistenceHandler dataPersistence,
             AdsInitialization adsInitialization,
+            AuthInitialization authInitialization,
             SceneSwitcher sceneSwitcher
             )
         {
@@ -30,6 +33,7 @@ namespace _Project.Scripts.Bootstrap
             _configFetcher = remoteConfigFetcher;
             _dataPersistence = dataPersistence;
             _adsInitialization = adsInitialization;
+            _authInitialization = authInitialization;
             _sceneSwitcher = sceneSwitcher;
         }
 
@@ -37,12 +41,16 @@ namespace _Project.Scripts.Bootstrap
         {
             await UniTask.WhenAll(
                 _firebaseSetup.InitializeFirebase(),
-                _configFetcher.FetchData()
+                _configFetcher.FetchData(),
+                _authInitialization.InitializeAuthentication()
                 );
-            await _dataPersistence.LoadPlayerData();
-            await _adsInitialization.InitializeAds();
 
-            _sceneSwitcher.LoadMenu();
+            await _adsInitialization.InitializeAds();
+            await _dataPersistence.LoadPlayerData();
+            //await _adsInitialization.InitializeAds();
+            //await _authInitialization.InitializeAuthentication();
+
+            //_sceneSwitcher.LoadMenu();
         }
     }
 }

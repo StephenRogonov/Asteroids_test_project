@@ -22,8 +22,9 @@ namespace _Project.Scripts.GameFlow
             _view.ExitClicked += Exit;
         }
 
-        public void EnableView()
+        public void EnableView(int score)
         {
+            _view.UpdateScore(score);
             _view.EnableObject();
         }
 

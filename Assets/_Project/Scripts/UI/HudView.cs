@@ -14,6 +14,9 @@ namespace _Project.Scripts.UI
         [SerializeField] private TMP_Text _playerRotationText;
         [SerializeField] private TMP_Text _playerSpeedText;
 
+        [Header("Score")]
+        [SerializeField] private TMP_Text _score;
+
         public void DisplayLaserRestorationTime(string time)
         {
             _restorationTimerText.text = "New Laser Shot: " + time;
@@ -29,6 +32,11 @@ namespace _Project.Scripts.UI
             _playerPositionText.text = "Position: " + position;
             _playerRotationText.text = "Rotation: " + rotation;
             _playerSpeedText.text = "Speed: " + speed;
+        }
+
+        public void DisplayScore(int score)
+        {
+            _score.text = "Score: " + score;
         }
     }
 }

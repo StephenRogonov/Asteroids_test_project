@@ -1,4 +1,7 @@
+using _Project.Scripts.Bootstrap.Configs;
+using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
+using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.PlayerWeapons;
 using System;
 using UnityEngine;
@@ -6,7 +9,7 @@ using Zenject;
 
 namespace _Project.Scripts.Obstacles.Asteroids
 {
-    public class Asteroid : MonoBehaviour, IDamageable, IPause
+    public class Asteroid : MonoBehaviour, IDamageable, IPause, IScore
     {
         [SerializeField] private float _speed = 5f;
         [SerializeField] private float _shardSize = 0.75f;
@@ -14,10 +17,15 @@ namespace _Project.Scripts.Obstacles.Asteroids
         [SerializeField] private float _destroyDistance = 25f;
 
         private PauseSwitcher _pauseHandler;
+        private ScoreCounter _scoreCounter;
+        private GameConfig _gameConfig;
 
         private Rigidbody2D _rigidbody;
         private AsteroidType _type;
         private ObstacleType _obstacleType;
+        private int _scoreValue;
+        private int _asteroidScoreValue;
+        private int _shardScoreValue;
 
         private Vector2 _startPosition;
         private Vector2 _currentPosition;
@@ -32,16 +40,25 @@ namespace _Project.Scripts.Obstacles.Asteroids
         public event Action<Asteroid> Destroyed;
 
         [Inject]
-        private void Construct(PauseSwitcher pauseHandler, IInstantiator instantiator)
+        private void Construct(
+            PauseSwitcher pauseHandler, 
+            ScoreCounter scoreCounter, 
+            IInstantiator instantiator,
+            DataPersistenceHandler dataPersistenceHandler
+            )
         {
             _pauseHandler = pauseHandler;
+            _scoreCounter = scoreCounter;
             _instantiator = instantiator;
+            _gameConfig = dataPersistenceHandler.GameConfig;
         }
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _obstacleType = ObstacleType.Asteroid;
+            _asteroidScoreValue = _gameConfig.AsteroidScoreValue;
+            _shardScoreValue = _gameConfig.ShardScoreValue;
         }
 
         private void OnEnable()
@@ -85,12 +102,26 @@ namespace _Project.Scripts.Obstacles.Asteroids
 
         public void TakeHit(HitType hitType)
         {
-            if (hitType == HitType.Missile && _type == AsteroidType.Asteroid)
+            if (_type == AsteroidType.Asteroid)
             {
-                for (int i = 0; i < _shardsAmount; i++)
+                _scoreValue = _asteroidScoreValue;
+
+                if (hitType == HitType.Missile)
                 {
-                    CreateShard();
+                    for (int i = 0; i < _shardsAmount; i++)
+                    {
+                        CreateShard();
+                    }
                 }
+            }
+            else if (_type == AsteroidType.Shard)
+            {
+                _scoreValue = _shardScoreValue;
+            }
+
+            if (hitType != HitType.Ship)
+            {
+            Score();
             }
 
             DestroyObject();
@@ -130,6 +161,11 @@ namespace _Project.Scripts.Obstacles.Asteroids
         {
             _rigidbody.bodyType = RigidbodyType2D.Dynamic;
             _rigidbody.linearVelocity = _linearVelocity;
+        }
+
+        public void Score()
+        {
+            _scoreCounter.AddScore(_scoreValue);
         }
     }
 }

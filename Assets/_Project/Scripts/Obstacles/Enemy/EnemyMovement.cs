@@ -1,4 +1,7 @@
+using _Project.Scripts.Bootstrap.Configs;
+using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
+using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
 using _Project.Scripts.PlayerWeapons;
 using System;
@@ -7,7 +10,7 @@ using Zenject;
 
 namespace _Project.Scripts.Obstacles.Enemy
 {
-    public class EnemyMovement : MonoBehaviour, IDamageable, IPause
+    public class EnemyMovement : MonoBehaviour, IDamageable, IPause, IScore
     {
         [SerializeField] private float _speed;
         [SerializeField] private float _rotationSpeed;
@@ -16,7 +19,10 @@ namespace _Project.Scripts.Obstacles.Enemy
         private Transform _player;
         private Vector2 _playerDirection;
         private ObstacleType _obstacleType;
+        private int _scoreValue;
         private PauseSwitcher _pauseHandler;
+        private ScoreCounter _scoreCounter;
+        private GameConfig _gameConfig;
 
         private bool _isPaused;
 
@@ -25,9 +31,15 @@ namespace _Project.Scripts.Obstacles.Enemy
         public event Action<EnemyMovement> Destroyed;
 
         [Inject]
-        private void Construct(PauseSwitcher pauseHandler)
+        private void Construct(
+            PauseSwitcher pauseHandler, 
+            ScoreCounter scoreCounter, 
+            DataPersistenceHandler dataPersistenceHandler
+            )
         {
             _pauseHandler = pauseHandler;
+            _scoreCounter = scoreCounter;
+            _gameConfig = dataPersistenceHandler.GameConfig;
         }
 
         public void Init(ShipMovement shipMovement)
@@ -39,6 +51,7 @@ namespace _Project.Scripts.Obstacles.Enemy
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _obstacleType = ObstacleType.Enemy;
+            _scoreValue = _gameConfig.EnemyScoreValue;
         }
 
         private void OnEnable()
@@ -98,6 +111,11 @@ namespace _Project.Scripts.Obstacles.Enemy
 
         public void TakeHit(HitType hitType)
         {
+            if (hitType != HitType.Ship)
+            {
+            Score();
+            }
+
             DestroyObject();
         }
 
@@ -117,6 +135,11 @@ namespace _Project.Scripts.Obstacles.Enemy
         {
             _rigidbody.bodyType = RigidbodyType2D.Dynamic;
             _isPaused = false;
+        }
+
+        public void Score()
+        {
+            _scoreCounter.AddScore(_scoreValue);
         }
     }
 }

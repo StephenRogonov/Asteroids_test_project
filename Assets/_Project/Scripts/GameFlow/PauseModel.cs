@@ -1,5 +1,6 @@
 using _Project.Scripts.Common;
 using _Project.Scripts.GameFlow;
+using _Project.Scripts.Obstacles.Score;
 using System;
 
 namespace _Project.Scripts.UI
@@ -9,13 +10,19 @@ namespace _Project.Scripts.UI
         private PauseSwitcher _pauseHandler;
         private MobileControls _mobileControls;
         private SceneSwitcher _sceneSwitcher;
+        private ScoreCounter _scoreCounter;
 
-        public event Action Paused;
+        public event Action<int> Paused;
 
-        public PauseModel(PauseSwitcher pauseHandler, SceneSwitcher sceneSwitcher)
+        public PauseModel(
+            PauseSwitcher pauseHandler, 
+            SceneSwitcher sceneSwitcher,
+            ScoreCounter scoreCounter
+            )
         {
             _pauseHandler = pauseHandler;
             _sceneSwitcher = sceneSwitcher;
+            _scoreCounter = scoreCounter;
         }
 
         public void Init(MobileControls mobileControls)
@@ -27,7 +34,7 @@ namespace _Project.Scripts.UI
         {
             _pauseHandler.PauseAll();
             _mobileControls.BlockButtons();
-            Paused?.Invoke();
+            Paused?.Invoke(_scoreCounter.TotalScore);
         }
 
         public void UnpauseGame()

@@ -2,6 +2,7 @@ using _Project.Scripts.Bootstrap.Advertising;
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.Obstacles;
+using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
 using _Project.Scripts.UI;
 using System;
@@ -15,15 +16,19 @@ namespace _Project.Scripts.GameFlow
         private ShipCollision _shipCollision;
         private IInterstitial _interstitial;
         private IRewarded _rewarded;
-        private PlayerData _playerData;
+        private DataPersistenceHandler _dataPersistenceHandler;
         private SceneSwitcher _sceneSwitcher;
         private ObstaclesFactory _obstaclesFactory;
         private ShipMovement _shipMovement;
+        private ScoreCounter _scoreCounter;
+
+        private bool _noAdsPurchased;
 
         private Action OnInterstitialShown;
         private Action OnRewardedShown;
 
-        public event Action GameOverTriggered;
+        public event Action<int> GameOverTriggered;
+        public event Action ContinueButtonClicked;
 
         public GameOverModel(
             PauseSwitcher pauseHandler,
@@ -31,15 +36,17 @@ namespace _Project.Scripts.GameFlow
             IRewarded rewarded,
             DataPersistenceHandler dataPersistenceHandler,
             SceneSwitcher sceneSwitcher,
-            ObstaclesFactory obstaclesFactory
+            ObstaclesFactory obstaclesFactory,
+            ScoreCounter scoreCounter
             )
         {
             _pauseHandler = pauseHandler;
             _interstitial = interstitial;
             _rewarded = rewarded;
-            _playerData = dataPersistenceHandler.PlayerData;
+            _dataPersistenceHandler = dataPersistenceHandler;
             _sceneSwitcher = sceneSwitcher;
             _obstaclesFactory = obstaclesFactory;
+            _scoreCounter = scoreCounter;
         }
 
         public void Init(MobileControls mobileControls, ShipMovement shipMovement, ShipCollision shipCollision)
@@ -47,6 +54,7 @@ namespace _Project.Scripts.GameFlow
             _mobileControls = mobileControls;
             _shipMovement = shipMovement;
             _shipCollision = shipCollision;
+            _noAdsPurchased = _dataPersistenceHandler.PlayerData.NoAdsPurchased;
 
             _shipCollision.Crashed += GameOverTrigger;
         }
@@ -65,7 +73,11 @@ namespace _Project.Scripts.GameFlow
         {
             _pauseHandler.PauseAll();
             _mobileControls.BlockButtons();
-            GameOverTriggered?.Invoke();
+        }
+
+        public void ActivateView()
+        {
+            GameOverTriggered?.Invoke(_scoreCounter.TotalScore);
         }
 
         public void Continue()
@@ -80,16 +92,17 @@ namespace _Project.Scripts.GameFlow
             _obstaclesFactory.ReturnSpawnedToPool();
             _shipMovement.ActivateObject();
             _mobileControls.UnblockButtons();
+            ContinueButtonClicked?.Invoke();
         }
 
         public void RestartGame()
         {
-            if (_playerData.NoAdsPurchased == false)
+            if (_noAdsPurchased == false)
             {
                 OnInterstitialShown += ReloadScene;
                 ShowInterstitial();
             }
-            else if (_playerData.NoAdsPurchased == true)
+            else if (_noAdsPurchased == true)
             {
                 ReloadScene();
             }
