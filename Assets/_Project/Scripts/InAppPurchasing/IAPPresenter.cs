@@ -4,7 +4,6 @@ using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 using UnityEngine;
 using UnityEngine.Purchasing;
-using UnityEngine.Purchasing.Extension;
 
 namespace _Project.Scripts.InAppPurchasing
 {

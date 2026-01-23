@@ -12,18 +12,18 @@ namespace _Project.Scripts.PlayerWeapons
 {
     public class MissilesFactory
     {
-        private ILocalAssetLoader _assetLoader;
+        private IAssetLoader _assetLoader;
         private GameConfig _gameConfig;
         private Transform _shipShootingPoint;
         private Pool<Missile> _missilesPool;
-        private GameObject _missilePrefab;
+        private Missile _missilePrefab;
         private IInstantiator _instantiator;
 
         public event Action AsteroidDestroyed;
         public event Action EnemyDestroyed;
 
         public MissilesFactory(
-            ILocalAssetLoader assetLoader,
+            IAssetLoader assetLoader,
             DataPersistenceHandler dataPersistenceHandler,
             IInstantiator instantiator
             )
@@ -42,12 +42,12 @@ namespace _Project.Scripts.PlayerWeapons
 
         private async void CreatePool()
         {
-            _missilePrefab = await _assetLoader.LoadAsset<Missile>(LocalAssetsIDs.MISSILE);
+            _missilePrefab = await _assetLoader.LoadAsset<Missile>(AssetsIDs.MISSILE);
             _missilesPool = _instantiator.Instantiate<Pool<Missile>>(new object[]
             { 
-                _missilePrefab.GetComponent<Missile>(), _gameConfig.MissilesPoolInitialSize 
+                _missilePrefab, _gameConfig.MissilesPoolInitialSize 
             });
-            _assetLoader.UnloadAsset(_missilePrefab);
+            _assetLoader.UnloadAsset();
         }
 
         public Missile GetMissile()

@@ -11,7 +11,7 @@ namespace _Project.Scripts.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<LocalAssetLoader>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AssetLoader>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SceneSwitcher>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<FileDataHandler>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<CloudDataHandler>().AsSingle().NonLazy();

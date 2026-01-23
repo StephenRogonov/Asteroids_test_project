@@ -141,14 +141,15 @@ namespace _Project.Scripts.DataPersistence
             }
 
             PlayerData.SaveDateTime = DateTime.Now;
+            string dataToStore = JsonConvert.SerializeObject(PlayerData, Formatting.Indented);
 
             if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork ||
                 Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
             {
-                await _cDataHandler.SaveData(PlayerData);
+                await _cDataHandler.SaveData(dataToStore);
             }
 
-            await _fDataHandler.SaveData(PlayerData);
+            await _fDataHandler.SaveData(dataToStore);
             PlayerDataChanged?.Invoke();
         }
     }

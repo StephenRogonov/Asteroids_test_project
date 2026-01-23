@@ -15,17 +15,20 @@ public class MainMenuLoader : MonoBehaviour
     private PurchasingUI _purchasingUI;
     private SceneSwitcher _sceneSwitcher;
 
-    private ILocalAssetLoader _assetLoader;
+    private IAssetLoader _assetLoader;
+    private IInstantiator _instantiator;
 
     [Inject]
     private void Construct(
-        ILocalAssetLoader assetLoader,
+        IInstantiator instantiator,
+        IAssetLoader assetLoader,
         IAPPresenter iAPPresenter,
         DataPersistenceHandler dataPersistenceHandler,
         ShopItemModel shopItemModel,
         SceneSwitcher sceneSwitcher
         )
     {
+        _instantiator = instantiator;
         _assetLoader = assetLoader;
         _iAPPresenter = iAPPresenter;
         _dataPersistenceHandler = dataPersistenceHandler;
@@ -35,10 +38,17 @@ public class MainMenuLoader : MonoBehaviour
 
     private async void Start()
     {
-        _purchasingUI = await _assetLoader.InstantiateAsset<PurchasingUI>(LocalAssetsIDs.NO_ADS_MENU);
+        _purchasingUI = _instantiator.InstantiatePrefabForComponent<PurchasingUI>(
+            await _assetLoader.LoadAsset<PurchasingUI>(AssetsIDs.NO_ADS_MENU));
+        _assetLoader.UnloadAsset();
+        
         _purchasingUI.Init(_iAPPresenter);
         _shopItemModel.Init(_purchasingUI);
-        _mainMenu = await _assetLoader.InstantiateAsset<MainMenu>(LocalAssetsIDs.MAIN_MENU);
+        
+        _mainMenu = _instantiator.InstantiatePrefabForComponent<MainMenu>(
+            await _assetLoader.LoadAsset<MainMenu>(AssetsIDs.MAIN_MENU));
+        _assetLoader.UnloadAsset();
+        
         _mainMenu.Init(_dataPersistenceHandler, _shopItemModel, _purchasingUI, _sceneSwitcher);
     }
 }

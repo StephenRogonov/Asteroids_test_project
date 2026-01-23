@@ -16,7 +16,8 @@ public class GameLoader : MonoBehaviour
 {
     [SerializeField] private Transform _shipSpawnPoint;
 
-    private ILocalAssetLoader _assetLoader;
+    private IAssetLoader _assetLoader;
+    private IInstantiator _instantiator;
 
     private HudView _hudView;
     private HudPresenter _hudPresenter;
@@ -45,7 +46,8 @@ public class GameLoader : MonoBehaviour
 
     [Inject]
     private void Construct(
-        ILocalAssetLoader assetLoader,
+        IInstantiator instantiator,
+        IAssetLoader assetLoader,
         HudPresenter hudPresenter,
         PauseModel pauseModel,
         GameOverModel gameOverModel,
@@ -63,6 +65,7 @@ public class GameLoader : MonoBehaviour
         LeaderboardPresenter leaderboardPresenter
         )
     {
+        _instantiator = instantiator;
         _assetLoader = assetLoader;
         _hudPresenter = hudPresenter;
         _pauseModel = pauseModel;
@@ -91,12 +94,31 @@ public class GameLoader : MonoBehaviour
 
     private async UniTask InstantiateAddressables()
     {
-        _shipMovement = await _assetLoader.InstantiateAsset<ShipMovement>(LocalAssetsIDs.PLAYER_SHIP);
-        _hudView = await _assetLoader.InstantiateAsset<HudView>(LocalAssetsIDs.HUD);
-        _mobileControls = await _assetLoader.InstantiateAsset<MobileControls>(LocalAssetsIDs.MOBILE_CONTROLS);
-        _pauseView = await _assetLoader.InstantiateAsset<PauseView>(LocalAssetsIDs.PAUSE_MENU);
-        _gameOverView = await _assetLoader.InstantiateAsset<GameOverView>(LocalAssetsIDs.GAME_OVER_MENU);
-        _leaderboardView = await _assetLoader.InstantiateAsset<LeaderboardView>(LocalAssetsIDs.LEADERBOARD_MENU);
+        //_assetLoader.LoadRemoteAsset(AssetsIDs.PLAYER_SHIP);
+
+        _shipMovement = _instantiator.InstantiatePrefabForComponent<ShipMovement>(
+            await _assetLoader.LoadAsset<ShipMovement>(AssetsIDs.PLAYER_SHIP));
+        _assetLoader.UnloadAsset();
+        
+        _hudView = _instantiator.InstantiatePrefabForComponent<HudView>(
+            await _assetLoader.LoadAsset<HudView>(AssetsIDs.HUD));
+        _assetLoader.UnloadAsset();
+        
+        _mobileControls = _instantiator.InstantiatePrefabForComponent<MobileControls>(
+            await _assetLoader.LoadAsset<MobileControls>(AssetsIDs.MOBILE_CONTROLS));
+        _assetLoader.UnloadAsset();
+        
+        _pauseView = _instantiator.InstantiatePrefabForComponent<PauseView>(
+            await _assetLoader.LoadAsset<PauseView>(AssetsIDs.PAUSE_MENU));
+        _assetLoader.UnloadAsset();
+        
+        _gameOverView = _instantiator.InstantiatePrefabForComponent<GameOverView>(
+            await _assetLoader.LoadAsset<GameOverView>(AssetsIDs.GAME_OVER_MENU));
+        _assetLoader.UnloadAsset();
+        
+        _leaderboardView = _instantiator.InstantiatePrefabForComponent<LeaderboardView>(
+            await _assetLoader.LoadAsset<LeaderboardView>(AssetsIDs.LEADERBOARD_MENU));
+        _assetLoader.UnloadAsset();
     }
 
     private void PositionShip()

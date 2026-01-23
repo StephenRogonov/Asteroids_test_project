@@ -365,8 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33419850b75131f4498bd06bc84d82a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _purchaseNoAdsUIPrefab: {fileID: 972642496945458168, guid: cc7530f5ff6535b4dae0bb20cde71c2d, type: 3}
-  _assetLoader: {fileID: 7858306268450162661}
+  _mainMenuLoader: {fileID: 0}
 --- !u!114 &1549552619
 MonoBehaviour:
   m_ObjectHideFlags: 0

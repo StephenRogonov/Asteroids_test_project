@@ -11,7 +11,7 @@ namespace _Project.Scripts.Obstacles.Score
         [SerializeField] private Transform _leaderboardTransform;
         [SerializeField] private Button _continueButton;
 
-        private ILocalAssetLoader _assetLoader;
+        private IAssetLoader _assetLoader;
         private LeaderboardEntryView _leaderboardEntryPrefab;
 
         public event Action ContinueClicked;
@@ -26,11 +26,11 @@ namespace _Project.Scripts.Obstacles.Score
             _continueButton.onClick.RemoveAllListeners();
         }
 
-        public async void Init(ILocalAssetLoader assetLoader)
+        public async void Init(IAssetLoader assetLoader)
         {
             _assetLoader = assetLoader;
-            GameObject leaderboardEntryGO = await _assetLoader.LoadAsset<LeaderboardEntryView>(LocalAssetsIDs.LEADERBOARD_SCORE_ENTRY);
-            _leaderboardEntryPrefab = leaderboardEntryGO.GetComponent<LeaderboardEntryView>();
+            _leaderboardEntryPrefab = await _assetLoader.LoadAsset<LeaderboardEntryView>(AssetsIDs.LEADERBOARD_SCORE_ENTRY);
+            _assetLoader.UnloadAsset();
         }
 
         public void UpdateLeaderboard(List<ScoreEntry> leaderboard)

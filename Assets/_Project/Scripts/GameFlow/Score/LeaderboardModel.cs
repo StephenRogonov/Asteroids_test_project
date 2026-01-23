@@ -9,7 +9,6 @@ namespace _Project.Scripts.Obstacles.Score
     public class LeaderboardModel : IDataPersistence, IDisposable
     {
         private DataPersistenceHandler _dataPersistenceHandler;
-        //private PlayerData _playerData;
         private ShipCollision _shipCollision;
         private ScoreCounter _scoreCounter;
         private GameOverModel _gameOverModel;
@@ -20,7 +19,6 @@ namespace _Project.Scripts.Obstacles.Score
         private bool _leaderboardChanged;
 
         private List<ScoreEntry> _leaderboard = new();
-        //private List<ScoreEntry> _sortedLeaderboard = new();
 
         public event Action GameOverTriggered;
 
@@ -31,7 +29,6 @@ namespace _Project.Scripts.Obstacles.Score
             )
         {
             _dataPersistenceHandler = dataPersistenceHandler;
-            //_playerData = _dataPersistenceHandler.PlayerData;
             _scoreCounter = scoreCounter;
             _gameOverModel = gameOverModel;
         }
@@ -49,9 +46,6 @@ namespace _Project.Scripts.Obstacles.Score
 
         public List<ScoreEntry> GetSortedLeaderboard()
         {
-            //_sortedLeaderboard.Clear();
-            //_sortedLeaderboard.AddRange(_playerData.Leaderboard);
-
             for (int i = 1; i < _leaderboard.Count; i++)
             {
                 for (int j = 0; j < _leaderboard.Count - 1; j++)

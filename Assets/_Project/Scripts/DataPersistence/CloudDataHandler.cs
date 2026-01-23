@@ -1,7 +1,5 @@
-﻿using _Project.Scripts.Obstacles.Score;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using Unity.Services.CloudSave;
 
@@ -10,11 +8,12 @@ namespace _Project.Scripts.DataPersistence
     public class CloudDataHandler : IDataHandler
     {
         private Dictionary<string, object> _playerData = new();
+        private readonly string _playerDataName = "player_data";
 
-        public async UniTask SaveData(PlayerData playerData)
+        public async UniTask SaveData(string playerData)
         {
-            string data = JsonConvert.SerializeObject(playerData, Formatting.Indented);
-            _playerData = new Dictionary<string, object>(JsonConvert.DeserializeObject<Dictionary<string, object>>(data));
+            _playerData.Add(_playerDataName, playerData);
+
             await CloudSaveService.Instance.Data.Player.SaveAsync(_playerData);
             _playerData.Clear();
         }
@@ -23,27 +22,13 @@ namespace _Project.Scripts.DataPersistence
         {
             PlayerData loadedData = new();
 
-            var rawLoadedData = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> {
-                nameof(PlayerData.SaveDateTime),
-                nameof(PlayerData.NoAdsPurchased),
-                nameof(PlayerData.Leaderboard)
-            });
+            var rawLoadedData = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string>{_playerDataName});
 
             if (rawLoadedData.Count > 0)
             {
-                if (rawLoadedData.TryGetValue(nameof(PlayerData.SaveDateTime), out var firstProp))
+                if (rawLoadedData.TryGetValue(_playerDataName, out var firstProp))
                 {
-                    loadedData.SaveDateTime = firstProp.Value.GetAs<DateTime>();
-                }
-
-                if (rawLoadedData.TryGetValue(nameof(PlayerData.NoAdsPurchased), out var secondProp))
-                {
-                    loadedData.NoAdsPurchased = secondProp.Value.GetAs<bool>();
-                }
-
-                if (rawLoadedData.TryGetValue(nameof(PlayerData.Leaderboard), out var thirdProp))
-                {
-                    loadedData.Leaderboard = thirdProp.Value.GetAs<List<ScoreEntry>>();
+                    loadedData = JsonConvert.DeserializeObject<PlayerData>(firstProp.Value.GetAs<string>());
                 }
 
                 return loadedData;

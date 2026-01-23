@@ -13,20 +13,20 @@ namespace _Project.Scripts.Obstacles
 {
     public class ObstaclesFactory
     {
-        private ILocalAssetLoader _assetLoader;
+        private IAssetLoader _assetLoader;
         private GameConfig _gameConfig;
         private IInstantiator _instantiator;
         private ShipMovement _shipMovement;
         private Pool<Asteroid> _asteroidsPool;
         private Pool<EnemyMovement> _enemiesPool;
-        private GameObject _asteroidPrefab;
-        private GameObject _enemyPrefab;
+        private Asteroid _asteroidPrefab;
+        private EnemyMovement _enemyPrefab;
 
         private List<Asteroid> _asteroidsSpawned = new();
         private List<EnemyMovement> _enemiesSpawned = new();
 
         public ObstaclesFactory(
-            ILocalAssetLoader assetLoader,
+            IAssetLoader assetLoader,
             DataPersistenceHandler dataPersistence,
             IInstantiator instantiator
             )
@@ -45,19 +45,19 @@ namespace _Project.Scripts.Obstacles
 
         public async void CreatePools()
         {
-            _asteroidPrefab = await _assetLoader.LoadAsset<Asteroid>(LocalAssetsIDs.ASTEROID);
+            _asteroidPrefab = await _assetLoader.LoadAsset<Asteroid>(AssetsIDs.ASTEROID);
             _asteroidsPool = _instantiator.Instantiate<Pool<Asteroid>>(new object[]
             {
-                _asteroidPrefab.GetComponent<Asteroid>(), _gameConfig.AsteroidsPoolInitialSize
+                _asteroidPrefab, _gameConfig.AsteroidsPoolInitialSize
             });
-            _assetLoader.UnloadAsset(_asteroidPrefab);
+            _assetLoader.UnloadAsset();
 
-            _enemyPrefab = await _assetLoader.LoadAsset<EnemyMovement>(LocalAssetsIDs.ENEMY);
+            _enemyPrefab = await _assetLoader.LoadAsset<EnemyMovement>(AssetsIDs.ENEMY);
             _enemiesPool = _instantiator.Instantiate<Pool<EnemyMovement>>(new object[] 
             { 
-                _enemyPrefab.GetComponent<EnemyMovement>(), _gameConfig.EnemiesPoolInitialSize 
+                _enemyPrefab, _gameConfig.EnemiesPoolInitialSize 
             });
-            _assetLoader.UnloadAsset(_enemyPrefab);
+            _assetLoader.UnloadAsset();
         }
 
         public void GetAsteroid()

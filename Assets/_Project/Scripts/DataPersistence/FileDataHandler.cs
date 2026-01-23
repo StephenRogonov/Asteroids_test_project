@@ -11,7 +11,7 @@ namespace _Project.Scripts.DataPersistence
         private readonly string _dataDirPath = Application.persistentDataPath;
         private readonly string _playerDataFileName = "player_data.game";
 
-        public async UniTask SaveData(PlayerData playerData)
+        public async UniTask SaveData(string playerData)
         {
             string fullPath = Path.Combine(_dataDirPath, _playerDataFileName);
 
@@ -19,11 +19,9 @@ namespace _Project.Scripts.DataPersistence
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath) ?? string.Empty);
 
-                string dataToStore = JsonConvert.SerializeObject(playerData, Formatting.Indented);
-
                 using FileStream stream = new FileStream(fullPath, FileMode.Create);
                 using StreamWriter writer = new StreamWriter(stream);
-                writer.Write(dataToStore);
+                writer.Write(playerData);
             }
             catch (Exception e)
             {

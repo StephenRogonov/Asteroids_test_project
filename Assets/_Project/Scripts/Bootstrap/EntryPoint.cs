@@ -18,15 +18,12 @@ namespace _Project.Scripts.Bootstrap
         private AdsInitialization _adsInitialization;
         private AuthInitialization _authInitialization;
 
-        private SceneSwitcher _sceneSwitcher;
-
         [Inject]
         private void Construct(FirebaseSetup firebaseSetup,
             FirebaseRemoteConfigFetcher remoteConfigFetcher,
             DataPersistenceHandler dataPersistence,
             AdsInitialization adsInitialization,
-            AuthInitialization authInitialization,
-            SceneSwitcher sceneSwitcher
+            AuthInitialization authInitialization
             )
         {
             _firebaseSetup = firebaseSetup;
@@ -34,7 +31,6 @@ namespace _Project.Scripts.Bootstrap
             _dataPersistence = dataPersistence;
             _adsInitialization = adsInitialization;
             _authInitialization = authInitialization;
-            _sceneSwitcher = sceneSwitcher;
         }
 
         async void Start()
@@ -47,10 +43,6 @@ namespace _Project.Scripts.Bootstrap
 
             await _adsInitialization.InitializeAds();
             await _dataPersistence.LoadPlayerData();
-            //await _adsInitialization.InitializeAds();
-            //await _authInitialization.InitializeAuthentication();
-
-            //_sceneSwitcher.LoadMenu();
         }
     }
 }

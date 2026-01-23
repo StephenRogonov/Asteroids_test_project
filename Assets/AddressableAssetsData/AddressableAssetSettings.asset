@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetSettings
-  m_DefaultGroup: 381b7116cc27f584ea600c2cb558e673
+  m_DefaultGroup: fc32f0972a9dd0542b599157fefd91a3
   m_currentHash:
     serializedVersion: 2
-    Hash: fd208d32137781ec0384e4e9ad788107
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -51,16 +51,18 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: fd5f20f430dc6e74587c311865a7ad08
   m_RemoteCatalogLoadPath:
-    m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+    m_Id: 93785f60593f80845a6fdb844933f245
+  m_ContentStateBuildPathProfileVariableName: BuildTarget
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 0adc669c55e18564682825d425e545e8, type: 2}
   - {fileID: 11400000, guid: d1b9fd6784e95ff4ca1f6253c8a63842, type: 2}
+  - {fileID: 11400000, guid: 6ac04ce71975afb4b8072f4d96d36d51, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -78,6 +80,20 @@ MonoBehaviour:
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: 93785f60593f80845a6fdb844933f245
         m_Value: <undefined>
+      - m_Id: fd5f20f430dc6e74587c311865a7ad08
+        m_Value: 'ServerData/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: 687aa4eb5fe7d7443a16b235aad5386c
+      m_ProfileName: RemoteProfile
+      m_Values:
+      - m_Id: 281973e767b931c45b5491eddd4fa0df
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 596f05ec983dc1245a1a189dc30b81d7
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 779f6e0ecb827ff4b9e3776911046e90
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 93785f60593f80845a6fdb844933f245
+        m_Value: 'https://storage.googleapis.com/asteroids_test_bucket/[BuildTarget]'
       - m_Id: fd5f20f430dc6e74587c311865a7ad08
         m_Value: 'ServerData/[BuildTarget]'
     m_ProfileEntryNames:
@@ -112,4 +128,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac565a9ce3a81574bbb9f3fea493d8b7, type: 2}
   - {fileID: 11400000, guid: 696945626ad4f534a96ec24a6251f736, type: 2}
   - {fileID: 11400000, guid: 1f9394657aae30f46b51a3dc11bbdc98, type: 2}
-  m_ActiveProfileId: 02dd97fe7566e5c40a97df06a5581dd0
+  m_ActiveProfileId: 687aa4eb5fe7d7443a16b235aad5386c

@@ -10,21 +10,26 @@ namespace _Project.Scripts.SceneInitializers
         private LoadOptionsView _loadOptionsUI;
         private LoadOptionsPresenter _loadOptionsPresenter;
 
-        private ILocalAssetLoader _assetLoader;
+        private IAssetLoader _assetLoader;
+        private IInstantiator _instantiator;
 
         [Inject]
         private void Construct(
-            ILocalAssetLoader assetLoader,
+            IInstantiator instantiator,
+            IAssetLoader assetLoader,
             LoadOptionsPresenter loadOptionsPresenter
             )
         {
+            _instantiator = instantiator;
             _assetLoader = assetLoader;
             _loadOptionsPresenter = loadOptionsPresenter;
         }
 
         private async void Start()
         {
-            _loadOptionsUI = await _assetLoader.InstantiateAsset<LoadOptionsView>(LocalAssetsIDs.LOAD_OPTIONS_MENU);
+            _loadOptionsUI = _instantiator.InstantiatePrefabForComponent<LoadOptionsView>(
+                await _assetLoader.LoadAsset<LoadOptionsView>(AssetsIDs.LOAD_OPTIONS_MENU));
+            _assetLoader.UnloadAsset();
             _loadOptionsPresenter.Init(_loadOptionsUI);
         }
     }
