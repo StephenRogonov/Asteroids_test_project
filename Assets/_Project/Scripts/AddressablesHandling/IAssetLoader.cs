@@ -5,8 +5,7 @@ namespace _Project.Scripts.AddressablesHandling
 {
     public interface IAssetLoader
     {
-        //public void LoadRemoteAsset(string asssetID);
-        public UniTask<T> LoadAsset<T>(string assetID);
-        public void UnloadAsset();
+        public UniTask<T> LoadAsset<T>(string assetID) where T : Component;
+        public void Unload<T>(T asset) where T : Component;
     }
 }

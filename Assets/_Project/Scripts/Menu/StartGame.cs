@@ -8,12 +8,15 @@ namespace _Project.Scripts.Menu
     {
         private Button _startButton;
         private SceneSwitcher _sceneSwitcher;
+        private MainMenuLoader _mainMenuLoader;
 
-        public void Init(SceneSwitcher sceneSwitcher)
+        public void Init(SceneSwitcher sceneSwitcher, MainMenuLoader mainMenuLoader)
         {
             _sceneSwitcher = sceneSwitcher;
+            _mainMenuLoader = mainMenuLoader;
 
             _startButton = GetComponent<Button>();
+            _startButton.onClick.AddListener(_mainMenuLoader.UnloadMenuAssets);
             _startButton.onClick.AddListener(_sceneSwitcher.LoadGame);
         }
 

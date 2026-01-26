@@ -11,6 +11,7 @@ namespace _Project.Scripts.UI
         private MobileControls _mobileControls;
         private SceneSwitcher _sceneSwitcher;
         private ScoreCounter _scoreCounter;
+        private GameLoader _gameLoader;
 
         public event Action<int> Paused;
 
@@ -25,9 +26,13 @@ namespace _Project.Scripts.UI
             _scoreCounter = scoreCounter;
         }
 
-        public void Init(MobileControls mobileControls)
+        public void Init(
+            MobileControls mobileControls,
+            GameLoader gameLoader
+            )
         {
             _mobileControls = mobileControls;
+            _gameLoader = gameLoader;
         }
 
         public void PauseGame()
@@ -45,6 +50,7 @@ namespace _Project.Scripts.UI
 
         public void ExitToMainMenu()
         {
+            _gameLoader.UnloadGameAssets();
             _sceneSwitcher.LoadMenu();
         }
     }

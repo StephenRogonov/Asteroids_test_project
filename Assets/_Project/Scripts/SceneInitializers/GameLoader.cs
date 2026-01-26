@@ -94,31 +94,29 @@ public class GameLoader : MonoBehaviour
 
     private async UniTask InstantiateAddressables()
     {
-        //_assetLoader.LoadRemoteAsset(AssetsIDs.PLAYER_SHIP);
-
         _shipMovement = _instantiator.InstantiatePrefabForComponent<ShipMovement>(
             await _assetLoader.LoadAsset<ShipMovement>(AssetsIDs.PLAYER_SHIP));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
         
         _hudView = _instantiator.InstantiatePrefabForComponent<HudView>(
             await _assetLoader.LoadAsset<HudView>(AssetsIDs.HUD));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
         
         _mobileControls = _instantiator.InstantiatePrefabForComponent<MobileControls>(
             await _assetLoader.LoadAsset<MobileControls>(AssetsIDs.MOBILE_CONTROLS));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
         
         _pauseView = _instantiator.InstantiatePrefabForComponent<PauseView>(
             await _assetLoader.LoadAsset<PauseView>(AssetsIDs.PAUSE_MENU));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
         
         _gameOverView = _instantiator.InstantiatePrefabForComponent<GameOverView>(
             await _assetLoader.LoadAsset<GameOverView>(AssetsIDs.GAME_OVER_MENU));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
         
         _leaderboardView = _instantiator.InstantiatePrefabForComponent<LeaderboardView>(
             await _assetLoader.LoadAsset<LeaderboardView>(AssetsIDs.LEADERBOARD_MENU));
-        _assetLoader.UnloadAsset();
+        //_assetLoader.UnloadAsset();
     }
 
     private void PositionShip()
@@ -140,7 +138,7 @@ public class GameLoader : MonoBehaviour
         _shipMovement.Init(_dataPersistenceHandler, _pauseSwitcher);
         _shipLaserAttack.Init(_shipLaserConfig, _dataPersistenceHandler);
         _shipMissilesAttack.Init(_missilesFactory);
-        _pauseModel.Init(_mobileControls);
+        _pauseModel.Init(_mobileControls, this);
         _pausePresenter.Init(_pauseView);
         _gameOverPresenter.Init(_gameOverView);
         _hudPresenter.Init(_hudView, _shipMovement);
@@ -153,5 +151,18 @@ public class GameLoader : MonoBehaviour
         _leaderboardModel.Init(_shipCollision);
         _leaderboardPresenter.Init(_leaderboardView);
         _leaderboardView.Init(_assetLoader);
+    }
+
+    public void UnloadGameAssets()
+    {
+        _missilesFactory.UnloadGameAssets();
+        _obstaclesFactory.UnloadGameAssets();
+        _leaderboardView.UnloadGameAssets();
+        _assetLoader.Unload(_shipMovement);
+        _assetLoader.Unload(_hudView);
+        _assetLoader.Unload(_mobileControls);
+        _assetLoader.Unload(_pauseView);
+        _assetLoader.Unload(_gameOverView);
+        _assetLoader.Unload(_leaderboardView);
     }
 }

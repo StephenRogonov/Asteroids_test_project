@@ -29,7 +29,7 @@ namespace _Project.Scripts.SceneInitializers
         {
             _loadOptionsUI = _instantiator.InstantiatePrefabForComponent<LoadOptionsView>(
                 await _assetLoader.LoadAsset<LoadOptionsView>(AssetsIDs.LOAD_OPTIONS_MENU));
-            _assetLoader.UnloadAsset();
+            _loadOptionsUI.Init(_assetLoader);
             _loadOptionsPresenter.Init(_loadOptionsUI);
         }
     }

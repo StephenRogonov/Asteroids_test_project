@@ -1,3 +1,4 @@
+using _Project.Scripts.AddressablesHandling;
 using System;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,15 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
         [SerializeField] private Button _localButton;
         [SerializeField] private Button _cloudButton;
 
+        private IAssetLoader _assetLoader;
+
         public event Action LocalClicked;
         public event Action CloudClicked;
+
+        public void Init(IAssetLoader assetLoader)
+        {
+            _assetLoader = assetLoader;
+        }
 
         private void OnEnable()
         {
@@ -57,6 +65,7 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
         private void DisableObject()
         {
             gameObject.SetActive(false);
+            _assetLoader.Unload(this);
         }
     }
 }

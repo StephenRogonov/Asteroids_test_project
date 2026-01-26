@@ -50,14 +50,18 @@ namespace _Project.Scripts.Obstacles
             {
                 _asteroidPrefab, _gameConfig.AsteroidsPoolInitialSize
             });
-            _assetLoader.UnloadAsset();
 
             _enemyPrefab = await _assetLoader.LoadAsset<EnemyMovement>(AssetsIDs.ENEMY);
             _enemiesPool = _instantiator.Instantiate<Pool<EnemyMovement>>(new object[] 
             { 
                 _enemyPrefab, _gameConfig.EnemiesPoolInitialSize 
             });
-            _assetLoader.UnloadAsset();
+        }
+
+        public void UnloadGameAssets()
+        {
+            _assetLoader.Unload(_asteroidPrefab);
+            _assetLoader.Unload(_enemyPrefab);
         }
 
         public void GetAsteroid()

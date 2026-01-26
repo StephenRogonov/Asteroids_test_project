@@ -40,15 +40,18 @@ public class MainMenuLoader : MonoBehaviour
     {
         _purchasingUI = _instantiator.InstantiatePrefabForComponent<PurchasingUI>(
             await _assetLoader.LoadAsset<PurchasingUI>(AssetsIDs.NO_ADS_MENU));
-        _assetLoader.UnloadAsset();
-        
         _purchasingUI.Init(_iAPPresenter);
+
         _shopItemModel.Init(_purchasingUI);
         
         _mainMenu = _instantiator.InstantiatePrefabForComponent<MainMenu>(
             await _assetLoader.LoadAsset<MainMenu>(AssetsIDs.MAIN_MENU));
-        _assetLoader.UnloadAsset();
-        
-        _mainMenu.Init(_dataPersistenceHandler, _shopItemModel, _purchasingUI, _sceneSwitcher);
+        _mainMenu.Init(_dataPersistenceHandler, _shopItemModel, _purchasingUI, _sceneSwitcher, this);
+    }
+
+    public void UnloadMenuAssets()
+    {
+        _assetLoader.Unload(_purchasingUI);
+        _assetLoader.Unload(_mainMenu);
     }
 }

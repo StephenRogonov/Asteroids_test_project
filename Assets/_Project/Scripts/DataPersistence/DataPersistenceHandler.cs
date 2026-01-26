@@ -11,13 +11,13 @@ namespace _Project.Scripts.DataPersistence
 {
     public class DataPersistenceHandler
     {
-        private FileDataHandler _fDataHandler;
-        private CloudDataHandler _cDataHandler;
+        private CloudDataHandler _cloudDataHandler;
+        private FileDataHandler _fileDataHandler;
         private LoadOptionsModel _loadOptionsModel;
         private SceneSwitcher _sceneSwitcher;
         private List<IDataPersistence> _dataPersistenceObjects = new();
-        private PlayerData _cData;
-        private PlayerData _fData;
+        private PlayerData _cloudData;
+        private PlayerData _fileData;
 
         public GameConfig GameConfig { get; private set; }
         public PlayerData PlayerData { get; private set; }
@@ -30,8 +30,8 @@ namespace _Project.Scripts.DataPersistence
             SceneSwitcher sceneSwitcher
             )
         {
-            _fDataHandler = dataHandler;
-            _cDataHandler = cloudDataHandler;
+            _fileDataHandler = dataHandler;
+            _cloudDataHandler = cloudDataHandler;
             _sceneSwitcher = sceneSwitcher;
         }
 
@@ -62,29 +62,29 @@ namespace _Project.Scripts.DataPersistence
             if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork ||
                 Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
             {
-                _cData = await _cDataHandler.LoadData();
-                _fData = await _fDataHandler.LoadData();
+                _cloudData = await _cloudDataHandler.LoadData();
+                _fileData = await _fileDataHandler.LoadData();
 
-                if (_cData != null && _fData != null)
+                if (_cloudData != null && _fileData != null)
                 {
-                    if (_cData.SaveDateTime == _fData.SaveDateTime)
+                    if (_cloudData.SaveDateTime == _fileData.SaveDateTime)
                     {
-                        PlayerData = _cData;
+                        PlayerData = _cloudData;
                     }
                     else
                     {
-                        _loadOptionsModel.TriggerLoadOptions(_fData.SaveDateTime, _cData.SaveDateTime);
+                        _loadOptionsModel.TriggerLoadOptions(_fileData.SaveDateTime, _cloudData.SaveDateTime);
                         return;
                     }
                 }
-                else if (_cData == null && _fData != null)
+                else if (_cloudData == null && _fileData != null)
                 {
-                    PlayerData = _fData;
+                    PlayerData = _fileData;
                     await SavePlayerData();
                 }
-                else if (_cData != null && _fData == null)
+                else if (_cloudData != null && _fileData == null)
                 {
-                    PlayerData = _cData;
+                    PlayerData = _cloudData;
                     await SavePlayerData();
                 }
                 else
@@ -94,7 +94,7 @@ namespace _Project.Scripts.DataPersistence
             }
             else
             {
-                PlayerData = await _fDataHandler.LoadData();
+                PlayerData = await _fileDataHandler.LoadData();
             }
 
 
@@ -111,11 +111,11 @@ namespace _Project.Scripts.DataPersistence
         {
             if (useCloud == true)
             {
-                PlayerData = _cData;
+                PlayerData = _cloudData;
             }
             else
             {
-                PlayerData = _fData;
+                PlayerData = _fileData;
             }
 
             await SavePlayerData();
@@ -146,10 +146,10 @@ namespace _Project.Scripts.DataPersistence
             if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork ||
                 Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
             {
-                await _cDataHandler.SaveData(dataToStore);
+                await _cloudDataHandler.SaveData(dataToStore);
             }
 
-            await _fDataHandler.SaveData(dataToStore);
+            await _fileDataHandler.SaveData(dataToStore);
             PlayerDataChanged?.Invoke();
         }
     }

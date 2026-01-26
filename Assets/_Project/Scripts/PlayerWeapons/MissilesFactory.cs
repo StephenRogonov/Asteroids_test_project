@@ -47,7 +47,11 @@ namespace _Project.Scripts.PlayerWeapons
             { 
                 _missilePrefab, _gameConfig.MissilesPoolInitialSize 
             });
-            _assetLoader.UnloadAsset();
+        }
+
+        public void UnloadGameAssets()
+        {
+            _assetLoader.Unload(_missilePrefab);
         }
 
         public Missile GetMissile()

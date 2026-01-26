@@ -20,13 +20,14 @@ namespace _Project.Scripts.Menu
             DataPersistenceHandler dataPersistenceHandler,
             ShopItemModel shopItemModel,
             PurchasingUI purchasingUI,
-            SceneSwitcher sceneSwitcher
+            SceneSwitcher sceneSwitcher,
+            MainMenuLoader mainMenuLoader
             )
         {
             _dataPersistenceHandler = dataPersistenceHandler;
             _playerData = _dataPersistenceHandler.PlayerData;
             _shopItemModel = shopItemModel;
-            _startGame.Init(sceneSwitcher);
+            _startGame.Init(sceneSwitcher, mainMenuLoader);
 
             if (_playerData.NoAdsPurchased == true)
             {

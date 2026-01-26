@@ -30,7 +30,11 @@ namespace _Project.Scripts.Obstacles.Score
         {
             _assetLoader = assetLoader;
             _leaderboardEntryPrefab = await _assetLoader.LoadAsset<LeaderboardEntryView>(AssetsIDs.LEADERBOARD_SCORE_ENTRY);
-            _assetLoader.UnloadAsset();
+        }
+
+        public void UnloadGameAssets()
+        {
+            _assetLoader.Unload(_leaderboardEntryPrefab);
         }
 
         public void UpdateLeaderboard(List<ScoreEntry> leaderboard)

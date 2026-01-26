@@ -1,20 +1,21 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.Scripts.AddressablesHandling
 {
     public class AssetLoader : IAssetLoader
     {
         private GameObject _cachedObject;
-        private GameObject _remoteObject;
+        private List<GameObject> _assets = new();
 
-        public async UniTask<T> LoadAsset<T>(string assetID)
+        public async UniTask<T> LoadAsset<T>(string assetID) where T : Component
         {
             var handle = Addressables.LoadAssetAsync<GameObject>(assetID);
             _cachedObject = await handle.Task.AsUniTask();
+            _assets.Add(_cachedObject);
 
             if (_cachedObject.TryGetComponent(out T asset) == false)
             {
@@ -24,31 +25,18 @@ namespace _Project.Scripts.AddressablesHandling
             return asset;
         }
 
-        //public void LoadRemoteAsset(string assetID)
-        //{
-        //    Addressables.InstantiateAsync(assetID).Completed += OnLoadDone;
-        //}
-
-        //public void OnLoadDone(AsyncOperationHandle<GameObject> handle)
-        //{
-        //    _remoteObject = handle.Result;
-        //}
-
-        //public void Unload()
-        //{
-        //    Addressables.Release(_remoteObject);
-        //}
-
-        public void UnloadAsset()
+        public void Unload<T>(T asset) where T : Component
         {
-            if (_cachedObject == null)
+            foreach (GameObject item in _assets)
             {
-                return;
+                if (item.GetComponent<T>() != null)
+                {
+                    Addressables.Release(item);
+                    //Debug.Log("!!!-Released-!!!");
+                    _assets.Remove(item);
+                    return;
+                }
             }
-
-            //Addressables.ReleaseInstance(_cachedObject);
-            Addressables.Release(_cachedObject);
-            _cachedObject = null;
         }
     }
 }
