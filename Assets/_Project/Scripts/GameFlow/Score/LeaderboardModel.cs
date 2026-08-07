@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
 using _Project.Scripts.Player;
+using _Project.Scripts.Sounds;
 using System;
 using System.Collections.Generic;
 
@@ -10,8 +11,9 @@ namespace _Project.Scripts.Obstacles.Score
     {
         private DataPersistenceHandler _dataPersistenceHandler;
         private ShipCollision _shipCollision;
-        private ScoreCounter _scoreCounter;
+        private GameSessionData _gameSessionData;
         private GameOverModel _gameOverModel;
+        private SoundFactory _soundFactory;
         private int _maxLeaderboardEntries = 5;
         private int _minScoreEntryIndex;
         private DateTime _currentDateTime;
@@ -24,13 +26,15 @@ namespace _Project.Scripts.Obstacles.Score
 
         public LeaderboardModel(
             DataPersistenceHandler dataPersistenceHandler,
-            ScoreCounter scoreCounter,
-            GameOverModel gameOverModel
+            GameSessionData gameSessionData,
+            GameOverModel gameOverModel,
+            SoundFactory soundFactory
             )
         {
             _dataPersistenceHandler = dataPersistenceHandler;
-            _scoreCounter = scoreCounter;
+            _gameSessionData = gameSessionData;
             _gameOverModel = gameOverModel;
+            _soundFactory = soundFactory;
         }
 
         public void Init(ShipCollision shipCollision)
@@ -66,6 +70,8 @@ namespace _Project.Scripts.Obstacles.Score
 
         private async void HandleNewScore()
         {
+            MarkAllScoreRecordsOld();
+
             if (_sameRun == true)
             {
                 foreach (ScoreEntry score in _leaderboard)
@@ -73,8 +79,9 @@ namespace _Project.Scripts.Obstacles.Score
                     if (score.ScoreDate == _currentDateTime)
                     {
                         _currentDateTime = DateTime.Now;
-                        score.Score = _scoreCounter.TotalScore;
+                        score.Score = _gameSessionData.TotalScore;
                         score.ScoreDate = _currentDateTime;
+                        score.IsNew = true;
                     }
                 }
 
@@ -84,7 +91,7 @@ namespace _Project.Scripts.Obstacles.Score
             {
                 FindMinScoreIndex();
 
-                if (_scoreCounter.TotalScore > _leaderboard[_minScoreEntryIndex].Score)
+                if (_gameSessionData.TotalScore > _leaderboard[_minScoreEntryIndex].Score)
                 {
                     if (CheckDuplicateMinScores())
                     {
@@ -93,7 +100,7 @@ namespace _Project.Scripts.Obstacles.Score
 
                     _leaderboard.RemoveAt(_minScoreEntryIndex);
                     _currentDateTime = DateTime.Now;
-                    _leaderboard.Add(new ScoreEntry(_currentDateTime, _scoreCounter.TotalScore));
+                    _leaderboard.Add(new ScoreEntry(_currentDateTime, _gameSessionData.TotalScore, true));
                     _leaderboardChanged = true;
                     await _dataPersistenceHandler.SavePlayerData();
                 }
@@ -101,7 +108,7 @@ namespace _Project.Scripts.Obstacles.Score
             else
             {
                 _currentDateTime = DateTime.Now;
-                _leaderboard.Add(new ScoreEntry(_currentDateTime, _scoreCounter.TotalScore));
+                _leaderboard.Add(new ScoreEntry(_currentDateTime, _gameSessionData.TotalScore, true));
                 _leaderboardChanged = true;
                 await _dataPersistenceHandler.SavePlayerData();
             }
@@ -140,6 +147,14 @@ namespace _Project.Scripts.Obstacles.Score
             return false;
         }
 
+        private void MarkAllScoreRecordsOld()
+        {
+            foreach (ScoreEntry entry in _leaderboard)
+            {
+                entry.IsNew = false;
+            }
+        }
+
         private void FindMaxDateIndex()
         {
             int minScore = _leaderboard[_minScoreEntryIndex].Score;
@@ -166,6 +181,7 @@ namespace _Project.Scripts.Obstacles.Score
 
         public void ShowGameOverMenu()
         {
+            _soundFactory.PlaySound(AudioID.ClickSound);
             _gameOverModel.ActivateView();
         }
 

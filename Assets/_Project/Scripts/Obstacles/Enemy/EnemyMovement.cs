@@ -15,30 +15,30 @@ namespace _Project.Scripts.Obstacles.Enemy
         [SerializeField] private float _speed;
         [SerializeField] private float _rotationSpeed;
 
+        private PauseSwitcher _pauseHandler;
+        private GameSessionData _gameSessionData;
+        private GameConfig _gameConfig;
+
         private Rigidbody2D _rigidbody;
         private Transform _player;
         private Vector2 _playerDirection;
-        private ObstacleType _obstacleType;
+        
         private int _scoreValue;
-        private PauseSwitcher _pauseHandler;
-        private ScoreCounter _scoreCounter;
-        private GameConfig _gameConfig;
-
         private bool _isPaused;
 
-        public ObstacleType ObstacleType => _obstacleType;
+        public ObstacleType ObstacleType { get; set; }
 
-        public event Action<EnemyMovement> Destroyed;
+        public event Action<EnemyMovement, Vector3> Destroyed;
 
         [Inject]
         private void Construct(
-            PauseSwitcher pauseHandler, 
-            ScoreCounter scoreCounter, 
+            PauseSwitcher pauseHandler,
+            GameSessionData gameSessionData,
             DataPersistenceHandler dataPersistenceHandler
             )
         {
             _pauseHandler = pauseHandler;
-            _scoreCounter = scoreCounter;
+            _gameSessionData = gameSessionData;
             _gameConfig = dataPersistenceHandler.GameConfig;
         }
 
@@ -50,7 +50,7 @@ namespace _Project.Scripts.Obstacles.Enemy
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
-            _obstacleType = ObstacleType.Enemy;
+            ObstacleType = ObstacleType.Enemy;
             _scoreValue = _gameConfig.EnemyScoreValue;
         }
 
@@ -113,7 +113,7 @@ namespace _Project.Scripts.Obstacles.Enemy
         {
             if (hitType != HitType.Ship)
             {
-            Score();
+                Score();
             }
 
             DestroyObject();
@@ -121,8 +121,8 @@ namespace _Project.Scripts.Obstacles.Enemy
 
         public void DestroyObject()
         {
+            Destroyed?.Invoke(this, gameObject.transform.position);
             gameObject.SetActive(false);
-            Destroyed?.Invoke(this);
         }
 
         public void Pause()
@@ -139,7 +139,7 @@ namespace _Project.Scripts.Obstacles.Enemy
 
         public void Score()
         {
-            _scoreCounter.AddScore(_scoreValue);
+            _gameSessionData.AddScore(_scoreValue);
         }
     }
 }

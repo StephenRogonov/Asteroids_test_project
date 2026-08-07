@@ -4,6 +4,7 @@ using _Project.Scripts.GameFlow;
 using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.PlayerWeapons;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -12,64 +13,62 @@ namespace _Project.Scripts.Obstacles.Asteroids
     public class Asteroid : MonoBehaviour, IDamageable, IPause, IScore
     {
         [SerializeField] private float _speed = 5f;
-        [SerializeField] private float _shardSize = 0.75f;
-        [SerializeField] private int _shardsAmount = 2;
         [SerializeField] private float _destroyDistance = 25f;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private List<Sprite> _sprites = new List<Sprite>();
+        [SerializeField] private Transform _spriteTransform;
 
-        private PauseSwitcher _pauseHandler;
-        private ScoreCounter _scoreCounter;
+        private PauseSwitcher _pauseSwitcher;
+        private GameSessionData _gameSessionData;
         private GameConfig _gameConfig;
 
         private Rigidbody2D _rigidbody;
         private AsteroidType _type;
-        private ObstacleType _obstacleType;
         private int _scoreValue;
         private int _asteroidScoreValue;
         private int _shardScoreValue;
-
         private Vector2 _startPosition;
         private Vector2 _currentPosition;
         private float _distancePassed;
-
         private Vector2 _linearVelocity;
+        private int _spritesCount;
 
-        private IInstantiator _instantiator;
+        public ObstacleType ObstacleType { get; set; }
 
-        public ObstacleType ObstacleType => _obstacleType;
-
-        public event Action<Asteroid> Destroyed;
+        public event Action<Asteroid, Vector3, AsteroidType> Destroyed;
 
         [Inject]
         private void Construct(
-            PauseSwitcher pauseHandler, 
-            ScoreCounter scoreCounter, 
-            IInstantiator instantiator,
+            PauseSwitcher pauseSwitcher,
+            GameSessionData gameSessionData,
             DataPersistenceHandler dataPersistenceHandler
             )
         {
-            _pauseHandler = pauseHandler;
-            _scoreCounter = scoreCounter;
-            _instantiator = instantiator;
+            _pauseSwitcher = pauseSwitcher;
+            _gameSessionData = gameSessionData;
             _gameConfig = dataPersistenceHandler.GameConfig;
         }
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
-            _obstacleType = ObstacleType.Asteroid;
+            ObstacleType = ObstacleType.Asteroid;
             _asteroidScoreValue = _gameConfig.AsteroidScoreValue;
             _shardScoreValue = _gameConfig.ShardScoreValue;
+            _spritesCount = _sprites.Count - 1;
         }
 
         private void OnEnable()
         {
+            _spriteRenderer.sprite = _sprites[UnityEngine.Random.Range(0, _spritesCount)];
+            _spriteTransform.rotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(-180, 180)));
             _startPosition = gameObject.transform.position;
-            _pauseHandler.Add(this);
+            _pauseSwitcher.Add(this);
         }
 
         private void OnDisable()
         {
-            _pauseHandler.Remove(this);
+            _pauseSwitcher.Remove(this);
         }
 
         private void Update()
@@ -106,12 +105,9 @@ namespace _Project.Scripts.Obstacles.Asteroids
             {
                 _scoreValue = _asteroidScoreValue;
 
-                if (hitType == HitType.Missile)
+                if (hitType == HitType.Laser)
                 {
-                    for (int i = 0; i < _shardsAmount; i++)
-                    {
-                        CreateShard();
-                    }
+                    SetType(AsteroidType.Shard);
                 }
             }
             else if (_type == AsteroidType.Shard)
@@ -121,7 +117,7 @@ namespace _Project.Scripts.Obstacles.Asteroids
 
             if (hitType != HitType.Ship)
             {
-            Score();
+                Score();
             }
 
             DestroyObject();
@@ -129,26 +125,8 @@ namespace _Project.Scripts.Obstacles.Asteroids
 
         public void DestroyObject()
         {
-            if (_type == AsteroidType.Shard)
-            {
-                Destroy(gameObject);
-            }
-            else if (_type == AsteroidType.Asteroid)
-            {
-                gameObject.SetActive(false);
-                Destroyed?.Invoke(this);
-            }
-        }
-
-        private void CreateShard()
-        {
-            Vector2 position = transform.position;
-            position += UnityEngine.Random.insideUnitCircle * 0.5f;
-
-            Asteroid shard = _instantiator.InstantiatePrefabForComponent<Asteroid>(this);
-            shard.SetType(AsteroidType.Shard);
-            shard.Move();
-            shard.transform.localScale = new Vector2(_shardSize, _shardSize);
+            gameObject.SetActive(false);
+            Destroyed?.Invoke(this, gameObject.transform.position, _type);
         }
 
         public void Pause()
@@ -165,7 +143,7 @@ namespace _Project.Scripts.Obstacles.Asteroids
 
         public void Score()
         {
-            _scoreCounter.AddScore(_scoreValue);
+            _gameSessionData.AddScore(_scoreValue);
         }
     }
 }

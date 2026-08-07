@@ -11,14 +11,14 @@ namespace _Project.Scripts.Common
 
         private IInstantiator _instantiator;
 
-        public Pool(T prefab, int count, IInstantiator instantiator)
+        public Pool(T prefab, int poolSize, IInstantiator instantiator)
         {
             _prefab = prefab;
             _instantiator = instantiator;
 
             T item;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < poolSize; i++)
             {
                 item = _instantiator.InstantiatePrefabForComponent<T>(_prefab);
                 item.gameObject.SetActive(false);

@@ -7,11 +7,13 @@ namespace _Project.Scripts.Obstacles.Score
     {
         public DateTime ScoreDate;
         public int Score;
+        public bool IsNew;
 
-        public ScoreEntry(DateTime scoreDate, int score)
+        public ScoreEntry(DateTime scoreDate, int score, bool isNew)
         {
             ScoreDate = scoreDate;
             Score = score;
+            IsNew = isNew;
         }
     }
 }

@@ -4,23 +4,21 @@ using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using Zenject;
 
 namespace _Project.Scripts.InAppPurchasing
 {
-    public class IAPPresenter : IDetailedStoreListener
+    public class IAPPresenter : IDetailedStoreListener, IDisposable, IInitializable
     {
-        private IStoreController _storeController;
-        private IExtensionProvider _extensionProvider;
-        private ShopItemModel _shopItemModel;
+        public IStoreController StoreController { get; private set; }
+        public IExtensionProvider ExtensionProvider { get; private set; }
         private PurchaseApplier _purchaseApplier;
+        private ResourceRequest _request;
 
-        private Action OnPurchaseCompleted;
+        private Action<bool> OnPurchaseCompleted;
 
-        public IAPPresenter(ShopItemModel shopItemModel, PurchaseApplier purchaseApplier)
+        public async void Initialize()
         {
-            _shopItemModel = shopItemModel;
-            _purchaseApplier = purchaseApplier;
-
             InitializationOptions options = new InitializationOptions()
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 .SetEnvironmentName("test");
@@ -28,14 +26,14 @@ namespace _Project.Scripts.InAppPurchasing
                 .SetEnvironmentName("production");
 #endif
 
-            InitializeServices();
+            await UnityServices.InitializeAsync().AsUniTask();
+            _request = Resources.LoadAsync<TextAsset>("IAPProductCatalog");
+            _request.completed += HandleIAPCatalogLoaded;
         }
 
-        private async void InitializeServices()
+        public void SetPurchaseApplier(PurchaseApplier purchaseApplier)
         {
-            await UnityServices.InitializeAsync().AsUniTask();
-            ResourceRequest request = Resources.LoadAsync<TextAsset>("IAPProductCatalog");
-            request.completed += HandleIAPCatalogLoaded;
+            _purchaseApplier = purchaseApplier;
         }
 
         private void HandleIAPCatalogLoaded(AsyncOperation operation)
@@ -73,17 +71,14 @@ namespace _Project.Scripts.InAppPurchasing
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
         {
-            _storeController = controller;
-            _extensionProvider = extensions;
-
-            _shopItemModel.SetProductsCollection(_storeController.products);
-            _purchaseApplier.SetProductsCollection(_storeController.products);
+            StoreController = controller;
+            ExtensionProvider = extensions;
         }
 
-        public void HandlePurchase(Product product, Action onPurchaseCompleted)
+        public void HandlePurchase(Product product, Action<bool> onPurchaseCompleted)
         {
             OnPurchaseCompleted = onPurchaseCompleted;
-            _storeController.InitiatePurchase(product);
+            StoreController.InitiatePurchase(product);
         }
 
         public void OnInitializeFailed(InitializationFailureReason error)
@@ -99,14 +94,14 @@ namespace _Project.Scripts.InAppPurchasing
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
             Debug.LogError($"Failed to purchase {product.definition.id} because of {failureReason}.");
-            OnPurchaseCompleted?.Invoke();
+            OnPurchaseCompleted?.Invoke(false);
             OnPurchaseCompleted = null;
         }
 
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
         {
             Debug.Log($"Successfully purchased {purchaseEvent.purchasedProduct.definition.id}.");
-            OnPurchaseCompleted?.Invoke();
+            OnPurchaseCompleted?.Invoke(true);
             OnPurchaseCompleted = null;
 
             _purchaseApplier.ApplyPurchase(purchaseEvent.purchasedProduct);
@@ -117,8 +112,13 @@ namespace _Project.Scripts.InAppPurchasing
         public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
         {
             Debug.LogError($"Unable to purchase product {product.definition.id}. {failureDescription.message}.");
-            OnPurchaseCompleted?.Invoke();
+            OnPurchaseCompleted?.Invoke(false);
             OnPurchaseCompleted = null;
+        }
+
+        public void Dispose()
+        {
+            _request.completed -= HandleIAPCatalogLoaded;
         }
     }
 }

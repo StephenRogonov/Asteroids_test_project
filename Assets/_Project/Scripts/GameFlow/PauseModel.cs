@@ -1,57 +1,45 @@
-using _Project.Scripts.Common;
 using _Project.Scripts.GameFlow;
-using _Project.Scripts.Obstacles.Score;
+using _Project.Scripts.Sounds;
 using System;
 
 namespace _Project.Scripts.UI
 {
     public class PauseModel
     {
-        private PauseSwitcher _pauseHandler;
-        private MobileControls _mobileControls;
-        private SceneSwitcher _sceneSwitcher;
-        private ScoreCounter _scoreCounter;
-        private GameLoader _gameLoader;
+        private PauseSwitcher _pauseSwitcher;
+        private GameStateLoader _gameExit;
+        private SoundFactory _soundFactory;
 
-        public event Action<int> Paused;
+        public event Action Paused;
+        public event Action ExitTriggered;
 
         public PauseModel(
-            PauseSwitcher pauseHandler, 
-            SceneSwitcher sceneSwitcher,
-            ScoreCounter scoreCounter
+            PauseSwitcher pauseSwitcher, 
+            GameStateLoader gameExit,
+            SoundFactory soundFactory
             )
         {
-            _pauseHandler = pauseHandler;
-            _sceneSwitcher = sceneSwitcher;
-            _scoreCounter = scoreCounter;
-        }
-
-        public void Init(
-            MobileControls mobileControls,
-            GameLoader gameLoader
-            )
-        {
-            _mobileControls = mobileControls;
-            _gameLoader = gameLoader;
+            _pauseSwitcher = pauseSwitcher;
+            _gameExit = gameExit;
+            _soundFactory = soundFactory;
         }
 
         public void PauseGame()
         {
-            _pauseHandler.PauseAll();
-            _mobileControls.BlockButtons();
-            Paused?.Invoke(_scoreCounter.TotalScore);
+            _pauseSwitcher.PauseAll();
+            Paused?.Invoke();
         }
 
         public void UnpauseGame()
         {
-            _mobileControls.UnblockButtons();
-            _pauseHandler.UnpauseAll();
+            _soundFactory.PlaySound(AudioID.ClickSound);
+            _pauseSwitcher.UnpauseAll();
         }
 
         public void ExitToMainMenu()
         {
-            _gameLoader.UnloadGameAssets();
-            _sceneSwitcher.LoadMenu();
+            _soundFactory.PlaySound(AudioID.ClickSound);
+            _gameExit.ExitToMainMenu();
         }
     }
 }

@@ -2,13 +2,11 @@ namespace _Project.Scripts.UI
 {
     public class HudModel
     {
-        private int _laserShotsCount;
-
-        public int LaserShotsCount => _laserShotsCount;
+        public int LaserShotsCount { get; set; }
 
         public void ChangeLaserShotsCount(int shots)
         {
-            _laserShotsCount += shots;
+            LaserShotsCount += shots;
         }
     }
 }

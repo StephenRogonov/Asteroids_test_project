@@ -1,6 +1,7 @@
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.InAppPurchasing;
+using _Project.Scripts.Sounds;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,19 +16,22 @@ namespace _Project.Scripts.Menu
         private PlayerData _playerData;
         private ShopItemModel _shopItemModel;
         private PurchasingUI _purchasingUI;
+        private SoundFactory _soundFactory;
 
         public void Init(
             DataPersistenceHandler dataPersistenceHandler,
             ShopItemModel shopItemModel,
             PurchasingUI purchasingUI,
             SceneSwitcher sceneSwitcher,
-            MainMenuLoader mainMenuLoader
+            MenuSceneEntryPoint mainMenuLoader,
+            SoundFactory soundFactory
             )
         {
             _dataPersistenceHandler = dataPersistenceHandler;
             _playerData = _dataPersistenceHandler.PlayerData;
             _shopItemModel = shopItemModel;
-            _startGame.Init(sceneSwitcher, mainMenuLoader);
+            _startGame.Init(sceneSwitcher, mainMenuLoader, soundFactory);
+            _soundFactory = soundFactory;
 
             if (_playerData.NoAdsPurchased == true)
             {
@@ -59,6 +63,7 @@ namespace _Project.Scripts.Menu
         {
             _shopItemModel.SetupProductPurchasePopup(ProductsIDs.NO_ADS);
             _purchasingUI.EnableObject();
+            _soundFactory.PlaySound(AudioID.ClickSound);
         }
     }
 }

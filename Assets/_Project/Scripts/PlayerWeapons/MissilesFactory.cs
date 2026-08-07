@@ -42,7 +42,7 @@ namespace _Project.Scripts.PlayerWeapons
 
         private async void CreatePool()
         {
-            _missilePrefab = await _assetLoader.LoadAsset<Missile>(AssetsIDs.MISSILE);
+            _missilePrefab = await _assetLoader.LoadPrefabByID<Missile>(AssetsIDs.MISSILE);
             _missilesPool = _instantiator.Instantiate<Pool<Missile>>(new object[]
             { 
                 _missilePrefab, _gameConfig.MissilesPoolInitialSize 
@@ -51,7 +51,7 @@ namespace _Project.Scripts.PlayerWeapons
 
         public void UnloadGameAssets()
         {
-            _assetLoader.Unload(_missilePrefab);
+            _assetLoader.Unload(AssetsIDs.MISSILE);
         }
 
         public Missile GetMissile()

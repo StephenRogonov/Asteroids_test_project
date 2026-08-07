@@ -3,21 +3,31 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.Scripts.AddressablesHandling
 {
     public class AssetLoader : IAssetLoader
     {
-        private GameObject _cachedObject;
-        private List<GameObject> _assets = new();
+        private Dictionary<string, AsyncOperationHandle> _cachedIDHandles = new();
+        private Dictionary<AssetReference, AsyncOperationHandle> _cachedReferenceHandles = new();
 
-        public async UniTask<T> LoadAsset<T>(string assetID) where T : Component
+        public int CachedAssetsCount { get; set; }
+
+        public async UniTask<T> LoadPrefabByID<T>(string assetID) where T : Component
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>(assetID);
-            _cachedObject = await handle.Task.AsUniTask();
-            _assets.Add(_cachedObject);
+            T asset;
+            GameObject resultAsset;
+            AsyncOperationHandle handle;
 
-            if (_cachedObject.TryGetComponent(out T asset) == false)
+            handle = Addressables.LoadAssetAsync<GameObject>(assetID);
+            _cachedIDHandles.Add(assetID, handle);
+            CachedAssetsCount++;
+            await handle.Task.AsUniTask();
+
+            resultAsset = (GameObject)handle.Result;
+
+            if (resultAsset.TryGetComponent(out asset) == false)
             {
                 throw new NullReferenceException($"Object of type {typeof(T)} is null on attempt to load it from addressables.");
             }
@@ -25,17 +35,51 @@ namespace _Project.Scripts.AddressablesHandling
             return asset;
         }
 
-        public void Unload<T>(T asset) where T : Component
+        public async UniTask<T> LoadAssetByReference<T>(AssetReferenceT<T> reference) where T : UnityEngine.Object
         {
-            foreach (GameObject item in _assets)
+            AsyncOperationHandle handle;
+            T resultAsset;
+
+            handle = Addressables.LoadAssetAsync<T>(reference);
+            _cachedReferenceHandles.Add(reference, handle);
+            CachedAssetsCount++;
+            await handle.Task.AsUniTask();
+            resultAsset = (T)handle.Result;
+
+            return resultAsset;
+        }
+
+        public async UniTask<T> LoadAssetByID<T>(string assetID) where T : UnityEngine.Object
+        {
+            AsyncOperationHandle handle;
+            T resultAsset;
+
+            handle = Addressables.LoadAssetAsync<T>(assetID);
+            _cachedIDHandles.Add(assetID, handle);
+            CachedAssetsCount++;
+            await handle.Task.AsUniTask();
+            resultAsset = (T)handle.Result;
+
+            return resultAsset;
+        }
+
+        public void Unload(string assetID)
+        {
+            if (_cachedIDHandles.ContainsKey(assetID))
             {
-                if (item.GetComponent<T>() != null)
-                {
-                    Addressables.Release(item);
-                    //Debug.Log("!!!-Released-!!!");
-                    _assets.Remove(item);
-                    return;
-                }
+                Addressables.Release(_cachedIDHandles[assetID]);
+                _cachedIDHandles.Remove(assetID);
+                CachedAssetsCount--;
+            }
+        }
+
+        public void Unload(AssetReference reference)
+        {
+            if (_cachedReferenceHandles.ContainsKey(reference))
+            {
+                Addressables.Release(_cachedReferenceHandles[reference]);
+                _cachedReferenceHandles.Remove(reference);
+                CachedAssetsCount--;
             }
         }
     }

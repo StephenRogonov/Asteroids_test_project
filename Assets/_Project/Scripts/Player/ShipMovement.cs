@@ -1,6 +1,7 @@
 using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
+using _Project.Scripts.Sounds;
 using System;
 using UnityEngine;
 
@@ -8,8 +9,12 @@ namespace _Project.Scripts.Player
 {
     public class ShipMovement : MonoBehaviour, IPause
     {
+        [SerializeField] private Sprite[] _shipSprites = new Sprite[2];
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+
         private GameConfig _gameConfig;
         private PauseSwitcher _pauseSwitcher;
+        private SoundFactory _soundFactory;
 
         private float _acceleration;
         private float _maxSpeed;
@@ -29,12 +34,17 @@ namespace _Project.Scripts.Player
 
         public event Action GameStarted;
 
-        public void Init(DataPersistenceHandler dataPersistenceHandler, PauseSwitcher pauseSwitcher)
+        public void Init(
+            DataPersistenceHandler dataPersistenceHandler, 
+            PauseSwitcher pauseSwitcher, 
+            SoundFactory soundFactory
+            )
         {
+            _spriteRenderer.sprite = _shipSprites[0];
             _gameConfig = dataPersistenceHandler.GameConfig;
             _pauseSwitcher = pauseSwitcher;
-            _pauseSwitcher.Add(this);
-
+            _soundFactory = soundFactory;
+            
             _acceleration = _gameConfig.ShipAcceleration;
             _maxSpeed = _gameConfig.ShipMaxSpeed;
             _rotationSpeed = _gameConfig.ShipRotationSpeed;
@@ -43,6 +53,20 @@ namespace _Project.Scripts.Player
         public void Move(bool isMoving)
         {
             _isMoving = isMoving;
+
+            if (gameObject.activeInHierarchy)
+            {
+                if (_isMoving && _isPaused == false)
+                {
+                    _soundFactory.PlayRegisteredSound(AudioID.Acceleration);
+                }
+                else
+                {
+                    _soundFactory.StopRegisteredSound(AudioID.Acceleration);
+                }
+            }
+
+            ChangeSprite();
         }
 
         public void Rotate(float rotateDirection)
@@ -78,6 +102,16 @@ namespace _Project.Scripts.Player
             RotateCharacter();
         }
 
+        private void OnEnable()
+        {
+            _pauseSwitcher.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            _pauseSwitcher.Remove(this);
+        }
+
         private void MoveCharacter()
         {
             if (_isMoving & _isPaused == false)
@@ -95,14 +129,21 @@ namespace _Project.Scripts.Player
             }
         }
 
+        private void ChangeSprite()
+        {
+            if (_isMoving && _isPaused == false)
+            {
+                _spriteRenderer.sprite = _shipSprites[1];
+            }
+            else
+            {
+                _spriteRenderer.sprite = _shipSprites[0];
+            }
+        }
+
         public void ActivateObject()
         {
             gameObject.SetActive(true);
-        }
-
-        public void DeactivateObject()
-        {
-            gameObject.SetActive(false);
         }
     }
 }

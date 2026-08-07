@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf308a7515c15c04f93e924ee94eed15, type: 3}
+  m_Name: AudioClipDataSO(Explosion)
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Sounds.AudioClipDataSO
+  ClipReference:
+    m_AssetGUID: 23b959fdea82e524396ef4e157cd9210
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  NameID: 3
+  LoadedClip: {fileID: 8300000, guid: 23b959fdea82e524396ef4e157cd9210, type: 3}
+  Volume: 1
+  Loop: 0
+  Pitch: 1
+  Pausable: 0

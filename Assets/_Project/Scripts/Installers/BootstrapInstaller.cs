@@ -12,7 +12,6 @@ namespace _Project.Scripts.Installers
 {
     public class BootstrapInstaller : MonoInstaller
     {
-        [SerializeField] private BootstrapLoader _bootstrapLoader;
         [SerializeField] private EntryPoint _entryPoint;
 
         public override void InstallBindings()
@@ -21,9 +20,7 @@ namespace _Project.Scripts.Installers
             Container.BindInterfacesAndSelfTo<FirebaseRemoteConfigFetcher>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<AdsInitialization>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<AuthInitialization>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<LoadOptionsModel>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<LoadOptionsPresenter>().AsSingle().NonLazy();
-            Container.Bind<BootstrapLoader>().FromInstance(_bootstrapLoader).AsSingle();
+            Container.BindInterfacesAndSelfTo<BootstrapSceneEntryPoint>().AsSingle().NonLazy();
             Container.Bind<EntryPoint>().FromInstance(_entryPoint).AsSingle();
         }
     }

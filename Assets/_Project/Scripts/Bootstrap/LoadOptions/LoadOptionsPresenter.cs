@@ -15,7 +15,6 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
         public void Init(LoadOptionsView loadOptionsView)
         {
             _view = loadOptionsView;
-
             _view.LocalClicked += LoadLocalSave;
             _view.CloudClicked += LoadCloudSave;
             _model.ShowView += EnableView;
@@ -23,8 +22,7 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
 
         private void EnableView(string local, string cloud)
         {
-            _view.DisplayLocalSaveDate(local);
-            _view.DisplayCloudSaveDate(cloud);
+            _view.DisplaySaveDates(local, cloud);
             _view.EnableObject();
         }
 

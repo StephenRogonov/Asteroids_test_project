@@ -1,10 +1,9 @@
 ﻿using _Project.Scripts.DataPersistence;
 using System;
-using Zenject;
 
 namespace _Project.Scripts.Bootstrap.LoadOptions
 {
-    public class LoadOptionsModel : IInitializable
+    public class LoadOptionsModel
     {
         private DataPersistenceHandler _dataPersistenceHandler;
 
@@ -17,20 +16,26 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
 
         public void TriggerLoadOptions(DateTime local, DateTime cloud)
         {
-            string localTime = local.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss");
-            string cloudTime = cloud.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss");
+            string localTime;
+            string cloudTime;
 
-            ShowView?.Invoke(localTime, cloudTime);
+            if (local > cloud)
+            {
+                localTime = local.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss") + " (newer)";
+                cloudTime = cloud.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss");
+            }
+            else
+            {
+                localTime = local.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss");
+                cloudTime = cloud.ToUniversalTime().ToString("dd MMM yyyy HH:mm:ss") + " (newer)";
+            }
+
+                ShowView?.Invoke(localTime, cloudTime);
         }
 
         public void UseSelectedLoadOption(bool useCloud)
         {
             _dataPersistenceHandler.UseCloudData(useCloud);
-        }
-
-        public void Initialize()
-        {
-            _dataPersistenceHandler.SetLoadOptionsModel(this);
         }
     }
 }

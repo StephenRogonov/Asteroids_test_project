@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Player
 {
-    [RequireComponent(typeof(BoxCollider2D))]
+    [RequireComponent(typeof(Collider2D))]
     public class ScreenWrap : MonoBehaviour
     {
         private Camera _mainCamera;

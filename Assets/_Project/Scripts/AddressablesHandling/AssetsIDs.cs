@@ -15,5 +15,11 @@
         public const string LEADERBOARD_MENU = "LeaderboardMenu";
         public const string LEADERBOARD_SCORE_ENTRY = "LeaderboardScoreEntry";
         public const string LOAD_OPTIONS_MENU = "LoadOptionsMenu";
+        public const string LOADING_OVERLAY = "LoadingOverlay";
+        public const string DESTRUCTION_PARTICLES = "DestructionParticles";
+        public const string LASER_BEAM = "LaserBeam";
+        public const string AUDIO_PLAYER = "AudioPlayer";
+        public const string AUDIO_CATALOG_MAIN = "AudioCatalogSO(MainMenu)";
+        public const string AUDIO_CATALOG_GAME = "AudioCatalogSO(GameScene)";
     }
 }

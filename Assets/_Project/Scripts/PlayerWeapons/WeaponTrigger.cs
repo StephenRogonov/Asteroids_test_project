@@ -1,16 +1,18 @@
 using _Project.Scripts.GameFlow;
 using _Project.Scripts.Player;
+using _Project.Scripts.Sounds;
 using _Project.Scripts.UI;
 using System;
 
 namespace _Project.Scripts.PlayerWeapons
 {
-    public class WeaponTrigger : IPause
+    public class WeaponTrigger : IPause, IDisposable
     {
-        private HudPresenter _hudPresenter;
+        private HudModel _hudModel;
         private ShipLaserAttack _shipLaserAttack;
         private ShipMissilesAttack _shipMissilesAttack;
         private PauseSwitcher _pauseHandler;
+        private SoundFactory _soundFactory;
 
         private bool _isPaused;
 
@@ -18,11 +20,14 @@ namespace _Project.Scripts.PlayerWeapons
         public event Action LaserShot;
 
         public WeaponTrigger(
-            HudPresenter hudController, 
-            PauseSwitcher pauseHandler)
+            HudModel hudModel,
+            PauseSwitcher pauseHandler,
+            SoundFactory soundFactory
+            )
         {
-            _hudPresenter = hudController;
+            _hudModel = hudModel;
             _pauseHandler = pauseHandler;
+            _soundFactory = soundFactory;
 
             _pauseHandler.Add(this);
         }
@@ -38,17 +43,18 @@ namespace _Project.Scripts.PlayerWeapons
             if (_isPaused == false)
             {
                 MissileShot?.Invoke();
+                _soundFactory.PlaySound(AudioID.MissileShot);
                 _shipMissilesAttack.PerformShot();
             }
         }
 
         public void ShootLaser()
         {
-            if (_hudPresenter.CanShootLaser() && _isPaused == false)
+            if (_hudModel.LaserShotsCount > 0 && _isPaused == false)
             {
                 LaserShot?.Invoke();
+                _soundFactory.PlaySound(AudioID.LaserShot);
                 _shipLaserAttack.PerformShot();
-                _hudPresenter.LaserShotsChanged(-1);
             }
         }
 
@@ -60,6 +66,11 @@ namespace _Project.Scripts.PlayerWeapons
         public void Unpause()
         {
             _isPaused = false;
+        }
+
+        public void Dispose()
+        {
+            _pauseHandler.Remove(this);
         }
     }
 }

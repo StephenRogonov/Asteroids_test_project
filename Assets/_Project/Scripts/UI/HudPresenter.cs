@@ -2,23 +2,24 @@ using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.GameFlow;
-using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
+using _Project.Scripts.PlayerWeapons;
 using System;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.UI
 {
-    public class HudPresenter : ITickable, IPause
+    public class HudPresenter : ITickable, IPause, IDisposable
     {
         private HudModel _model;
         private HudView _view;
         private GameConfig _gameConfig;
         private ShipMovement _shipMovement;
         private PauseSwitcher _pauseHandler;
-        private ScoreCounter _scoreCounter;
+        private GameSessionData _gameSessionData;
         private CountdownTimer _timer;
+        private WeaponTrigger _weaponTrigger;
 
         private string _shipPosition;
         private int _shipRotation;
@@ -31,13 +32,15 @@ namespace _Project.Scripts.UI
             HudModel model, 
             DataPersistenceHandler dataPersistenceHandler,
             PauseSwitcher pauseHandler,
-            ScoreCounter scoreCounter
+            GameSessionData gameSessionData,
+            WeaponTrigger weaponTrigger
             )
         {
             _model = model;
             _gameConfig = dataPersistenceHandler.GameConfig;
             _pauseHandler = pauseHandler;
-            _scoreCounter = scoreCounter;
+            _gameSessionData = gameSessionData;
+            _weaponTrigger = weaponTrigger;
         }
 
         public void Init(HudView hudView, ShipMovement shipMovement)
@@ -51,6 +54,7 @@ namespace _Project.Scripts.UI
             _timer.Reset(_gameConfig.LaserShotRestorationTime);
 
             LaserShotsChanged(_gameConfig.LaserShotsStartCount);
+            _weaponTrigger.LaserShot += LaserFired;
 
             _isInitialized = true;
         }
@@ -68,7 +72,7 @@ namespace _Project.Scripts.UI
 
                 _timer.Tick(Time.deltaTime);
                 _view.DisplayLaserRestorationTime(TimeSpan.FromSeconds(_timer.RemainingTime).ToString("mm':'ss"));
-                _view.DisplayScore(_scoreCounter.TotalScore);
+                _view.DisplayScore(_gameSessionData.TotalScore);
 
                 if (_timer.RemainingTime < 0)
                 {
@@ -78,14 +82,9 @@ namespace _Project.Scripts.UI
             }
         }
 
-        public bool CanShootLaser()
+        private void LaserFired()
         {
-            if (_model.LaserShotsCount > 0)
-            {
-                return true;
-            }
-
-            return false;
+            LaserShotsChanged(-1);
         }
 
         public void LaserShotsChanged(int iterator)
@@ -112,6 +111,12 @@ namespace _Project.Scripts.UI
         public void Unpause()
         {
             _isPaused = false;
+        }
+
+        public void Dispose()
+        {
+            _pauseHandler.Add(this);
+            _weaponTrigger.LaserShot -= LaserFired;
         }
     }
 }

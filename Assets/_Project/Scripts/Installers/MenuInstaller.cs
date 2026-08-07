@@ -1,19 +1,18 @@
 using _Project.Scripts.InAppPurchasing;
-using UnityEngine;
+using _Project.Scripts.Sounds;
 using Zenject;
 
 namespace _Project.Scripts.Installers
 {
     public class MenuInstaller : MonoInstaller
     {
-        [SerializeField] private MainMenuLoader _mainMenuLoader;
-
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<PurchaseApplier>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<IAPPresenter>().AsSingle().Lazy();
-            Container.Bind<ShopItemModel>().AsSingle().Lazy();
-            Container.Bind<MainMenuLoader>().FromInstance(_mainMenuLoader).AsSingle();
+            Container.Bind<ShopItemModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MainMenuAudioCatalog>().AsSingle().NonLazy();
+            Container.Bind<SoundFactory>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<MenuSceneEntryPoint>().AsSingle();
         }
     }
 }

@@ -6,19 +6,17 @@ namespace _Project.Scripts.InAppPurchasing
     {
         private ProductCollection _products;
         private PurchasingUI _purchasingUI;
+        private IAPPresenter _IAPPresenter;
 
-        public void Init(PurchasingUI purchasingUI)
+        public void Init(PurchasingUI purchasingUI, IAPPresenter IAPPresenter)
         {
             _purchasingUI = purchasingUI;
-        }
-
-        public void SetProductsCollection(ProductCollection productCollection)
-        {
-            _products = productCollection;
+            _IAPPresenter = IAPPresenter;
         }
 
         public void SetupProductPurchasePopup(string productID)
         {
+            _products = _IAPPresenter.StoreController.products;
             _purchasingUI.SetupPurchasePopup(_products.WithID(productID));
         }
     }

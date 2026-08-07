@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.UI;
+﻿using _Project.Scripts.Sounds;
+using _Project.Scripts.UI;
 using System;
 
 namespace _Project.Scripts.GameFlow
@@ -7,10 +8,15 @@ namespace _Project.Scripts.GameFlow
     {
         private PauseModel _model;
         private PauseView _view;
+        private GameSessionData _gameSessionData;
 
-        public PausePresenter(PauseModel model)
+        public PausePresenter(
+            PauseModel model, 
+            GameSessionData gameSessionData
+            )
         {
             _model = model;
+            _gameSessionData = gameSessionData;
         }
 
         public void Init(PauseView pauseView)
@@ -22,9 +28,9 @@ namespace _Project.Scripts.GameFlow
             _view.ExitClicked += Exit;
         }
 
-        public void EnableView(int score)
+        public void EnableView()
         {
-            _view.UpdateScore(score);
+            _view.UpdateScore(_gameSessionData.TotalScore);
             _view.EnableObject();
         }
 

@@ -21,6 +21,7 @@ namespace _Project.Scripts.GameFlow
             _model.GameOverTriggered += UpdateView;
             _view.RestartClicked += RestartGame;
             _view.ContinueClicked += ContinueGame;
+            _view.ExitClicked += ExitGame;
         }
 
         private void RestartGame()
@@ -31,6 +32,11 @@ namespace _Project.Scripts.GameFlow
         private void ContinueGame()
         {
             _model.Continue();
+        }
+
+        private void ExitGame()
+        {
+            _model.ExitToMainMenu();
         }
 
         private void UpdateView(int score)
@@ -44,6 +50,7 @@ namespace _Project.Scripts.GameFlow
             _model.GameOverTriggered -= UpdateView;
             _view.RestartClicked -= RestartGame;
             _view.ContinueClicked -= ContinueGame;
+            _view.ExitClicked -= ExitGame;
         }
     }
 }

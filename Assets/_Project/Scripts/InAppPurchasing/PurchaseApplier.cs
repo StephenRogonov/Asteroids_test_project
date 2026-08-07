@@ -9,22 +9,22 @@ namespace _Project.Scripts.InAppPurchasing
     {
         private ProductCollection _products;
         private DataPersistenceHandler _dataPersistenceHandler;
+        private IAPPresenter _IAPPresenter;
         private bool _noAdsPurchased;
 
-        public PurchaseApplier(DataPersistenceHandler dataPersistenceHandler)
+        public PurchaseApplier(DataPersistenceHandler dataPersistenceHandler, IAPPresenter IAPPresenter)
         {
             _dataPersistenceHandler = dataPersistenceHandler;
+            _IAPPresenter = IAPPresenter;
 
             _dataPersistenceHandler.AddDataObject(this);
-        }
-
-        public void SetProductsCollection(ProductCollection productCollection)
-        {
-            _products = productCollection;
+            _IAPPresenter.SetPurchaseApplier(this);
         }
 
         public void ApplyPurchase(Product product)
         {
+            _products = _IAPPresenter.StoreController.products;
+
             if (product == _products.WithID(ProductsIDs.NO_ADS))
             {
                 ApplyNoAds();

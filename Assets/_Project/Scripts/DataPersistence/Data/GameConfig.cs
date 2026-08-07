@@ -14,6 +14,8 @@ namespace _Project.Scripts.Bootstrap.Configs
         public int EnemiesPoolInitialSize { get; set; }
         public float EnemiesSpawnRate { get; set; }
         public float SpawnDistance { get; set; }
+        public int DestructionParticlesPoolInitialSize { get; set; }
+        public int AudioSourcesPoolInitialSize { get; set; }
         public int LaserShotsStartCount { get; set; }
         public float LaserShotRestorationTime { get; set; }
         public float LaserBeamLifetime { get; set; }

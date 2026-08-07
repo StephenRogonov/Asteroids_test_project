@@ -3,6 +3,8 @@ using _Project.Scripts.Bootstrap.Advertising;
 using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
+using _Project.Scripts.GameFlow;
+using _Project.Scripts.InAppPurchasing;
 using Zenject;
 
 namespace _Project.Scripts.Installers
@@ -11,14 +13,16 @@ namespace _Project.Scripts.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<AssetLoader>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<SceneSwitcher>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AssetLoader>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<FileDataHandler>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<CloudDataHandler>().AsSingle().NonLazy();
             Container.Bind<GameConfig>().AsSingle().NonLazy();
             Container.Bind<DataPersistenceHandler>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<Interstitial>().AsSingle();
             Container.BindInterfacesAndSelfTo<Rewarded>().AsSingle();
+            Container.Bind<PauseSwitcher>().AsSingle();
+            Container.BindInterfacesAndSelfTo<IAPPresenter>().AsSingle().NonLazy();
         }
     }
 }

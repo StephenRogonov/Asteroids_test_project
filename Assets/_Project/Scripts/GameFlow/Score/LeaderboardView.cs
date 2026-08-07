@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.AddressablesHandling;
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace _Project.Scripts.Obstacles.Score
     {
         [SerializeField] private Transform _leaderboardTransform;
         [SerializeField] private Button _continueButton;
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private RectTransform _rectTransform;
 
         private IAssetLoader _assetLoader;
         private LeaderboardEntryView _leaderboardEntryPrefab;
@@ -29,12 +32,12 @@ namespace _Project.Scripts.Obstacles.Score
         public async void Init(IAssetLoader assetLoader)
         {
             _assetLoader = assetLoader;
-            _leaderboardEntryPrefab = await _assetLoader.LoadAsset<LeaderboardEntryView>(AssetsIDs.LEADERBOARD_SCORE_ENTRY);
+            _leaderboardEntryPrefab = await _assetLoader.LoadPrefabByID<LeaderboardEntryView>(AssetsIDs.LEADERBOARD_SCORE_ENTRY);
         }
 
         public void UnloadGameAssets()
         {
-            _assetLoader.Unload(_leaderboardEntryPrefab);
+            _assetLoader.Unload(AssetsIDs.LEADERBOARD_SCORE_ENTRY);
         }
 
         public void UpdateLeaderboard(List<ScoreEntry> leaderboard)
@@ -58,12 +61,22 @@ namespace _Project.Scripts.Obstacles.Score
 
         public void EnableObject()
         {
+            _canvasGroup.alpha = 0;
+            _rectTransform.localScale = new Vector3(1f, 0f, 1f);
             gameObject.SetActive(true);
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_canvasGroup.DOFade(1f, 0.4f))
+                .Join(_rectTransform.DOScale(Vector3.one, 0.4f)
+                .SetEase(Ease.OutBack));
         }
 
         private void DisableObject()
         {
-            gameObject.SetActive(false);
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_canvasGroup.DOFade(0f, 0.4f))
+                .Join(_rectTransform.DOScale(new Vector3(1f, 0f, 1f), 0.2f)
+                .SetEase(Ease.InBack))
+                .OnComplete(() => gameObject.SetActive(false));
         }
     }
 }

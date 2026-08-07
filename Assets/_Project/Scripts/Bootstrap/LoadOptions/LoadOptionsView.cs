@@ -35,13 +35,9 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
             _cloudButton.onClick.RemoveAllListeners();
         }
 
-        public void DisplayLocalSaveDate(string localSaveDate)
+        public void DisplaySaveDates(string localSaveDate, string cloudSaveDate)
         {
             _localSaveDateText.text = "Local save: " + localSaveDate;
-        }
-
-        public void DisplayCloudSaveDate(string cloudSaveDate)
-        {
             _cloudSaveDateText.text = "Cloud save: " + cloudSaveDate;
         }
 
@@ -65,7 +61,7 @@ namespace _Project.Scripts.Bootstrap.LoadOptions
         private void DisableObject()
         {
             gameObject.SetActive(false);
-            _assetLoader.Unload(this);
+            _assetLoader.Unload(AssetsIDs.LOAD_OPTIONS_MENU);
         }
     }
 }

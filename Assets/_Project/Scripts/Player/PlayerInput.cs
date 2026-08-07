@@ -14,7 +14,7 @@ namespace _Project.Scripts.Player
 
         public PlayerInput(
             PlayerControls playerControls,
-            WeaponTrigger uiController, 
+            WeaponTrigger uiController,
             PauseModel pauseButton
             )
         {
@@ -70,37 +70,46 @@ namespace _Project.Scripts.Player
 
         private void Move(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (_shipMovement != null)
             {
-                _shipMovement.Move(true);
-            }
-            else if (context.canceled)
-            {
-                _shipMovement.Move(false);
+                if (context.performed)
+                {
+                    _shipMovement.Move(true);
+                }
+                else if (context.canceled)
+                {
+                    _shipMovement.Move(false);
+                }
             }
         }
 
         private void PlayerRotateLeft(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (_shipMovement != null)
             {
-                _shipMovement.Rotate(1f);
-            }
-            else if (context.canceled)
-            {
-                _shipMovement.Rotate(0f);
+                if (context.performed)
+                {
+                    _shipMovement.Rotate(1f);
+                }
+                else if (context.canceled)
+                {
+                    _shipMovement.Rotate(0f);
+                }
             }
         }
 
         private void PlayerRotateRight(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (_shipMovement != null)
             {
-                _shipMovement.Rotate(-1f);
-            }
-            else if (context.canceled)
-            {
-                _shipMovement.Rotate(0f);
+                if (context.performed)
+                {
+                    _shipMovement.Rotate(-1f);
+                }
+                else if (context.canceled)
+                {
+                    _shipMovement.Rotate(0f);
+                }
             }
         }
 

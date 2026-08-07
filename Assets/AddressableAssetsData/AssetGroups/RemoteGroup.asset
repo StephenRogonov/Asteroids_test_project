@@ -15,8 +15,38 @@ MonoBehaviour:
   m_GroupName: RemoteGroup
   m_GUID: 381b7116cc27f584ea600c2cb558e673
   m_SerializeEntries:
+  - m_GUID: 006a3d06a3477314481de205b82163e1
+    m_Address: AudioClipDataSO(BackgroundMusic)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 026fa6c5e0fac0749ae54b45e5c1cf47
+    m_Address: AudioClipDataSO(Missile)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1073448b1ec1136458ccbd0a421213a8
     m_Address: LeaderboardScoreEntry
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11ad23ae668a0e44f9b8ecd272a4b015
+    m_Address: AudioClipDataSO(GameOver)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22e8aafc959a1f1498a72ebad84c5148
+    m_Address: ClickSound
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23b959fdea82e524396ef4e157cd9210
+    m_Address: Explosion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39285d3ced5565541b26f3c4513c483d
+    m_Address: AudioClipDataSO(Explosion)
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -25,8 +55,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50f8d4ae88b60de4c9e07d0e24f6b58a
+    m_Address: AudioClipDataSO(Acceleration)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5182a8eeba9939f4cadbc67b1b75f672
+    m_Address: MissileShot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56d357458ff7f2c4e963682c7c26d928
     m_Address: GameOverMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56df9efbd4bef9a468f10d089854fb14
+    m_Address: ShipAcceleration
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -35,13 +80,53 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 659605473ea1ed0488a78afec9e8ee25
+    m_Address: AudioCatalogSO(MainMenu)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e7f0aad48de2b64eb3608c7ae218e76
+    m_Address: LaserShot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80da39e47a79b394e80e077a190033f8
+    m_Address: DestructionParticles
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 892204b2c568af4408c77c820e2a7bc4
+    m_Address: BackgroundMusic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9bf4a17266eef244dac0091f4828d594
     m_Address: MainMenu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a95677b00153891439872e27c407660d
+    m_Address: LoadingOverlay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b280be51d1907104fab0e8bd244f077d
     m_Address: PlayerShip
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b384ae1e72fe99147a3ded200b88b654
+    m_Address: AudioClipDataSO(Click)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b79dd41b8a9cbef46a265f695c1097be
+    m_Address: AudioCatalogSO(GameScene)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb2614f41ceb7dd4a92961aa65c50050
+    m_Address: GameOver
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -55,8 +140,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc25bff13ec2b154899d5a78e02003b9
+    m_Address: AudioPlayer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cc7530f5ff6535b4dae0bb20cde71c2d
     m_Address: NoAdsMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ceb2eccabf953fd4c89aedf9ea2581c5
+    m_Address: AudioClipDataSO(Laser)
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e54228e78ec280243996ed272bc7df03
+    m_Address: LaserBeam
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

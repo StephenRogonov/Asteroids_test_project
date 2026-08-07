@@ -1,6 +1,6 @@
 using _Project.Scripts.Bootstrap.Configs;
-using _Project.Scripts.Bootstrap.LoadOptions;
 using _Project.Scripts.Common;
+using _Project.Scripts.SceneInitializers;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +13,7 @@ namespace _Project.Scripts.DataPersistence
     {
         private CloudDataHandler _cloudDataHandler;
         private FileDataHandler _fileDataHandler;
-        private LoadOptionsModel _loadOptionsModel;
+        private BootstrapSceneEntryPoint _bootstrapSceneEntryPoint;
         private SceneSwitcher _sceneSwitcher;
         private List<IDataPersistence> _dataPersistenceObjects = new();
         private PlayerData _cloudData;
@@ -35,9 +35,9 @@ namespace _Project.Scripts.DataPersistence
             _sceneSwitcher = sceneSwitcher;
         }
 
-        public void SetLoadOptionsModel(LoadOptionsModel loadOptionsModel)
+        public void SetBootstrapEntryPoint(BootstrapSceneEntryPoint bootstrapSceneEntryPoint)
         {
-            _loadOptionsModel = loadOptionsModel;
+            _bootstrapSceneEntryPoint = bootstrapSceneEntryPoint;
         }
 
         public void AddDataObject(IDataPersistence dataPersistence) => _dataPersistenceObjects.Add(dataPersistence);
@@ -73,7 +73,7 @@ namespace _Project.Scripts.DataPersistence
                     }
                     else
                     {
-                        _loadOptionsModel.TriggerLoadOptions(_fileData.SaveDateTime, _cloudData.SaveDateTime);
+                        await _bootstrapSceneEntryPoint.LoadSaveChoiseMenu(_fileData.SaveDateTime, _cloudData.SaveDateTime);
                         return;
                     }
                 }

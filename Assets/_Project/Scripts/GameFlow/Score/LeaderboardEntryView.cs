@@ -10,10 +10,15 @@ namespace _Project.Scripts.Obstacles.Score
         [SerializeField] private TMP_Text _scoreText;
 
         public void FillScoreEntryData(ScoreEntry scoreEntry)
-        {
-            
+        {   
             _dateText.text = scoreEntry.ScoreDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
             _scoreText.text = scoreEntry.Score.ToString();
+
+            if (scoreEntry.IsNew)
+            {
+                _dateText.fontStyle = FontStyles.Bold;
+                _scoreText.fontStyle = FontStyles.Bold;
+            }
         }
     }
 }

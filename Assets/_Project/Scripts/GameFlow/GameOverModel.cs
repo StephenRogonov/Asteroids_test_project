@@ -2,8 +2,8 @@ using _Project.Scripts.Bootstrap.Advertising;
 using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using _Project.Scripts.Obstacles;
-using _Project.Scripts.Obstacles.Score;
 using _Project.Scripts.Player;
+using _Project.Scripts.Sounds;
 using _Project.Scripts.UI;
 using System;
 
@@ -20,7 +20,9 @@ namespace _Project.Scripts.GameFlow
         private SceneSwitcher _sceneSwitcher;
         private ObstaclesFactory _obstaclesFactory;
         private ShipMovement _shipMovement;
-        private ScoreCounter _scoreCounter;
+        private GameSessionData _gameSessionData;
+        private GameStateLoader _gameStateLoader;
+        private SoundFactory _soundFactory;
 
         private bool _noAdsPurchased;
 
@@ -37,7 +39,9 @@ namespace _Project.Scripts.GameFlow
             DataPersistenceHandler dataPersistenceHandler,
             SceneSwitcher sceneSwitcher,
             ObstaclesFactory obstaclesFactory,
-            ScoreCounter scoreCounter
+            GameSessionData gameSessionData,
+            GameStateLoader gameStateLoader,
+            SoundFactory soundFactory
             )
         {
             _pauseHandler = pauseHandler;
@@ -46,7 +50,9 @@ namespace _Project.Scripts.GameFlow
             _dataPersistenceHandler = dataPersistenceHandler;
             _sceneSwitcher = sceneSwitcher;
             _obstaclesFactory = obstaclesFactory;
-            _scoreCounter = scoreCounter;
+            _gameSessionData = gameSessionData;
+            _gameStateLoader = gameStateLoader;
+            _soundFactory = soundFactory;
         }
 
         public void Init(MobileControls mobileControls, ShipMovement shipMovement, ShipCollision shipCollision)
@@ -71,17 +77,20 @@ namespace _Project.Scripts.GameFlow
 
         private void GameOverTrigger()
         {
+            _soundFactory.StopRegisteredSound(AudioID.Acceleration);
+            _soundFactory.PlaySound(AudioID.GameOver);
             _pauseHandler.PauseAll();
             _mobileControls.BlockButtons();
         }
 
         public void ActivateView()
         {
-            GameOverTriggered?.Invoke(_scoreCounter.TotalScore);
+            GameOverTriggered?.Invoke(_gameSessionData.TotalScore);
         }
 
         public void Continue()
         {
+            _soundFactory.PlaySound(AudioID.ClickSound);
             OnRewardedShown += ContinueGame;
             ShowRewarded();
         }
@@ -97,6 +106,7 @@ namespace _Project.Scripts.GameFlow
 
         public void RestartGame()
         {
+            _soundFactory.PlaySound(AudioID.ClickSound);
             if (_noAdsPurchased == false)
             {
                 OnInterstitialShown += ReloadScene;
@@ -108,10 +118,16 @@ namespace _Project.Scripts.GameFlow
             }
         }
 
+        public void ExitToMainMenu()
+        {
+            _soundFactory.PlaySound(AudioID.ClickSound);
+            _gameStateLoader.ExitToMainMenu();
+        }
+
         private void ReloadScene()
         {
             OnInterstitialShown -= ReloadScene;
-            _sceneSwitcher.LoadGame();
+            _gameStateLoader.ReloadGameScene();
         }
 
         public void Dispose()

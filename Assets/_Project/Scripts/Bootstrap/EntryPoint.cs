@@ -2,7 +2,6 @@ using _Project.Scripts.Bootstrap.Advertising;
 using _Project.Scripts.Bootstrap.Authentication;
 using _Project.Scripts.Bootstrap.Configs;
 using _Project.Scripts.Bootstrap.Firebase;
-using _Project.Scripts.Common;
 using _Project.Scripts.DataPersistence;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
